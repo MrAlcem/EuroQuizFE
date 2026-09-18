@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EuroQuiz - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="AdminPanel.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">EQ</div>
+            <div class="logo-text">EuroQuiz</div>
+        </div>
+
+        <nav class="nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-list"></i> Questions
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-plus"></i> Add Question
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i> Users
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-bar"></i> Results
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-tags"></i> Categories
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>
+                    Admin Panel
+                    <span class="badge">BACKEND FEEDBACK ACTIVE</span>
+                </h1>
+                <p>Manage quiz questions, user database, and system logs.</p>
+            </div>
+            <div class="header-right">
+                <i class="fas fa-bell"></i>
+                <div class="user-info">
+                    <div class="avatar"></div>
+                    <span>(USER) ROLE / POSITION</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-icon blue"><i class="fas fa-book"></i></div>
+                <div class="stat-info">
+                    <h3>X AMOUNT</h3>
+                    <p>TOTAL QUESTIONS</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <h3>X AMOUNT</h3>
+                    <p>REGISTERED USERS</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-info">
+                    <h3>X AMOUNT</h3>
+                    <p>QUIZ RESULTS LOGGED</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pink"><i class="fas fa-heart"></i></div>
+                <div class="stat-info">
+                    <h3>X AMOUNT</h3>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content grid -->
+        <div class="content">
+            <!-- LEFT COLUMN -->
+            <div>
+                <!-- Recent Questions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Questions</h2>
+                        <a href="#">View all questions</a>
+                    </div>
+
+                    <table id="questions-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Question Text Preview</th>
+                                <th>Category</th>
+                                <th>Country Context</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- New rows will be appended here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- User Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>User Overview</h2>
+                        <a href="#">View all users</a>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Total Score</th>
+                                <th>Date Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>quizmaster</td>
+                                <td>quiz@domain.com</td>
+                                <td>1,520 pts</td>
+                                <td>2025-09-13</td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>croatiafan</td>
+                                <td>croatia@domain.com</td>
+                                <td>980 pts</td>
+                                <td>2025-09-09</td>
+                            </tr>
+                            <tr>
+                                <td>#003</td>
+                                <td>nl_jensen</td>
+                                <td>jensen@domain.com</td>
+                                <td>875 pts</td>
+                                <td>2025-09-08</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div>
+                <!-- Add New Question -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Add New Question</h2>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+                        Create and append a new validation schema record to the live quiz collection.
+                    </p>
+
+                    <div class="form-group">
+                        <label>Question text</label>
+                        <input type="text" placeholder="e.g. What is the national flower of Sweden?" id="question-text">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="question-nation">
+                                <option>Sweden</option>
+                                <option>Croatia</option>
+                                <option>Netherlands</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="question-category">
+                                <option>Nature</option>
+                                <option>Geography</option>
+                                <option>History</option>
+                                <option>Culture</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Option A</label>
+                            <input type="text" placeholder="Linnea (Twinflower)" id="opt-a">
+                        </div>
+                        <div class="form-group">
+                            <label>Option B</label>
+                            <input type="text" placeholder="Tulip" id="opt-b">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Option C</label>
+                            <input type="text" placeholder="Rose" id="opt-c">
+                        </div>
+                        <div class="form-group">
+                            <label>Option D</label>
+                            <input type="text" placeholder="Lily of the valley" id="opt-d">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correct Option Reference</label>
+                        <div class="correct-options">
+                            <label>
+                                <input type="checkbox" id="ans-a">
+                                Option A
+                            </label>
+                            <label>
+                                <input type="checkbox" id="ans-b">
+                                Option B
+                            </label>
+                            <label>
+                                <input type="checkbox" id="ans-c">
+                                Option C
+                            </label>
+                            <label>
+                                <input type="checkbox" id="ans-d">
+                                Option D
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <button class="btn">Add Question Entry</button>
+                </div>
+
+                <!-- Question Distribution -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Question Distribution</h2>
+                        <a href="#">Filter Schema</a>
+                    </div>
+                    <div class="chart-box">
+                        <div class="donut">
+                            <div class="donut-text">
+                                142<br>
+                                <small>QUESTIONS</small>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="dot blue"></span>
+                                Croatia (HR) <span style="margin-left:auto;">48 Qs</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="dot green"></span>
+                                Netherlands (NL) <span style="margin-left:auto;">47 Qs</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="dot orange"></span>
+                                Sweden (SE) <span style="margin-left:auto;">47 Qs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="Questions.js"></script>
+
+</body>
+
+</html>
