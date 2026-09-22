@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="../styles/index.css">
+    <title>Admin</title>
+    <link rel="stylesheet" href="../styles/Main.css">
 </head>
+
 <body>
-    <h1>Admin Panel</h1>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-        <tr>
-            <td>John Doe</td>
-            <td>john@example.com</td>
-        </tr>
-    </table>
-    <h1>Admin Panel</h1>
+    <div class="container">
+        <button id="dark-mode-toggle" type="button"></button>
+        <div class="top-bar">
+            <a href="Index.html" class="btn-text" data-i18n="home">Home</a>
+            <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+        </div>
+
+        <h1>Admin</h1>
+        <p class="subtitle">Admin area</p>
+    </div>
+
+    <script src="../js/App.js"></script>
+    <script>
+        requireAdmin();
+        document.getElementById("logout-btn").addEventListener("click", logout);
+        setupSiteSettings();
+    </script>
 </body>
+
 </html>
