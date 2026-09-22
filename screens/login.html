@@ -16,18 +16,10 @@
         <h1 id="page-title">Welcome</h1>
         <p class="subtitle" id="page-subtitle">Login to play the quiz</p>
 
-        <div class="error" id="error-message" style="display: none;"></div>
-
         <form id="auth-form">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
-            </div>
-
-            <!-- Email field – only shown in Register mode -->
-            <div class="form-group" id="email-group" style="display: none;">
                 <label for="email">Email</label>
-                <input type="email" id="email">
+                <input type="email" id="email" required>
             </div>
 
             <div class="form-group">
@@ -35,13 +27,17 @@
                 <input type="password" id="password" required>
             </div>
 
-            <button type="submit" class="btn-main" id="auth-btn">Login</button>
+            <div class="form-group" id="mfa-group" style="display:none;">
+                <label for="mfa-code">6-digit code</label>
+                <input type="text" id="mfa-code" inputmode="numeric" pattern="[0-9]*" maxlength="6">
+            </div>
+
+            <div class="error-inline" id="auth-error" style="display:none;"></div>
+
+            <button type="submit" class="btn-main" id="auth-submit">Login</button>
         </form>
 
-        <div class="register-link">
-            <span id="toggle-text">Don't have an account?</span>
-            <a href="#" id="toggle-mode">Register</a>
-        </div>
+        <a href="Register.html" class="btn-text" style="margin-top: 16px;">Create an account</a>
     </div>
 
     <!-- Core -->
@@ -63,80 +59,58 @@
         redirectIfLoggedIn();
         setupSiteSettings();
 
-        // ---------- Toggle Login / Register ----------
-        let isRegisterMode = false;
+        var pendingChallengeToken = null;
 
-        const form = document.getElementById("auth-form");
-        const errorBox = document.getElementById("error-message");
-        const authBtn = document.getElementById("auth-btn");
-        const toggleMode = document.getElementById("toggle-mode");
-        const toggleText = document.getElementById("toggle-text");
-        const pageTitle = document.getElementById("page-title");
-        const pageSubtitle = document.getElementById("page-subtitle");
-        const emailGroup = document.getElementById("email-group");
-        const emailInput = document.getElementById("email");
+        function showError(message) {
+            var error = document.getElementById("auth-error");
+            error.textContent = message;
+            error.style.display = "block";
+        }
 
-        toggleMode.addEventListener("click", function (e) {
-            e.preventDefault();
-            isRegisterMode = !isRegisterMode;
-            errorBox.style.display = "none";
+        document.getElementById("auth-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
 
-            if (isRegisterMode) {
-                pageTitle.textContent = "Create Account";
-                pageSubtitle.textContent = "Register to play the quiz";
-                authBtn.textContent = "Register";
-                toggleText.textContent = "Already have an account?";
-                toggleMode.textContent = "Login";
-                emailGroup.style.display = "block";
-                emailInput.required = true;
-            } else {
-                pageTitle.textContent = "Welcome";
-                pageSubtitle.textContent = "Login to play the quiz";
-                authBtn.textContent = "Login";
-                toggleText.textContent = "Don't have an account?";
-                toggleMode.textContent = "Register";
-                emailGroup.style.display = "none";
-                emailInput.required = false;
-            }
-        });
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value;
+            var submitBtn = document.getElementById("auth-submit");
 
-        // ---------- Form submit ----------
-        form.addEventListener("submit", async function (e) {
-            e.preventDefault();
-
-            const username = document.getElementById("username").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
-
-            errorBox.style.display = "none";
-            authBtn.disabled = true;
-            authBtn.textContent = isRegisterMode ? "Creating account..." : "Logging in...";
+            document.getElementById("auth-error").style.display = "none";
+            submitBtn.disabled = true;
 
             try {
-                let result;
+                if (pendingChallengeToken) {
+                    var code = document.getElementById("mfa-code").value.trim();
+                    var mfaResult = await verifyMfaCode(pendingChallengeToken, code);
 
-                if (isRegisterMode) {
-                    result = await registerUser(username, email, password);
-                } else {
-                    result = await loginUser(username, password);
+                    if (!mfaResult.success) {
+                        showError(mfaResult.message || "Invalid code");
+                        return;
+                    }
+
+                    saveSession(mfaResult);
+                    window.location.href = "Index.html";
+                    return;
                 }
 
-                if (result.success) {
-                    // Use the proper session helper
-                    saveSession(result);
-                    window.location.href = "Index.html";   // or home.html – change if needed
-                } else {
-                    errorBox.textContent = result.message || "Something went wrong";
-                    errorBox.style.display = "block";
+                var result = await loginUser(email, password);
+
+                if (result.mfaRequired) {
+                    pendingChallengeToken = result.challengeToken;
+                    document.getElementById("mfa-group").style.display = "block";
+                    document.getElementById("auth-submit").textContent = "Verify code";
+                    return;
                 }
-            } catch (err) {
-                console.error(err);
-                errorBox.textContent = "Server error. Try again later.";
-                errorBox.style.display = "block";
+
+                if (!result.success) {
+                    showError(result.message || "Login failed");
+                    return;
+                }
+
+                saveSession(result);
+                window.location.href = "Index.html";
+            } finally {
+                submitBtn.disabled = false;
             }
-
-            authBtn.disabled = false;
-            authBtn.textContent = isRegisterMode ? "Register" : "Login";
         });
     </script>
 </body>

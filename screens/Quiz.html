@@ -19,13 +19,12 @@
       </div>
 
       <div class="header">
-        <div class="lives-row" id="lives"></div>
-        <div><span data-i18n="question">Question</span> <strong id="current">1</strong>/10</div>
+        <div><span data-i18n="question">Question</span> <strong id="current">1</strong>/<span id="total">10</span></div>
       </div>
 
       <div class="question" id="question-text">Loading...</div>
       <div id="options"></div>
-      <div class="feedback" id="feedback"></div>
+      <div class="error-inline" id="quiz-error" style="display:none;"></div>
 
       <button type="button" class="btn-main" id="submit-btn" disabled data-i18n="submitAnswer">Submit Answer</button>
       <button type="button" class="btn-main" id="next-btn" style="display:none;" data-i18n="nextQuestion">Next
@@ -63,12 +62,10 @@
     requireLogin();
     document.getElementById("logout-btn").addEventListener("click", logout);
 
-    var lives = 3;
     var currentIndex = 0;
-    var correctAnswers = 0;
     var questions = [];
-    var selected = [];
-    var answered = false;
+    var answers = [];
+    var selectedOption = null;
 
     function hearts(n) {
       var html = "";
@@ -82,23 +79,28 @@
       return html;
     }
 
-    function updateLives() {
-      document.getElementById("lives").innerHTML = hearts(lives);
-    }
-
     async function startQuiz() {
-      lives = 3;
       currentIndex = 0;
-      correctAnswers = 0;
-      selected = [];
-      answered = false;
-
-      questions = await getQuestionsFromMyDatabase();
+      answers = [];
+      selectedOption = null;
 
       document.getElementById("quiz-screen").style.display = "block";
       document.getElementById("result-screen").style.display = "none";
-      updateLives();
+      document.getElementById("quiz-error").style.display = "none";
 
+      try {
+        questions = await fetchQuizQuestions();
+      } catch (err) {
+        document.getElementById("question-text").textContent = "";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("submit-btn").style.display = "none";
+        var error = document.getElementById("quiz-error");
+        error.textContent = "Failed to load questions";
+        error.style.display = "block";
+        return;
+      }
+
+      document.getElementById("total").textContent = questions.length;
       showQuestion();
     }
 
@@ -110,102 +112,70 @@
       var optionsDiv = document.getElementById("options");
       optionsDiv.innerHTML = "";
 
-      q.options.forEach(function (opt, i) {
+      ["A", "B", "C", "D"].forEach(function (key) {
         var div = document.createElement("div");
         div.className = "option";
-        div.textContent = opt;
+        div.textContent = q.options[key];
         div.onclick = function () {
-          toggleOption(div, i);
+          selectOption(div, key);
         };
         optionsDiv.appendChild(div);
       });
 
-      document.getElementById("feedback").style.display = "none";
       document.getElementById("submit-btn").style.display = "block";
       document.getElementById("submit-btn").disabled = true;
       document.getElementById("next-btn").style.display = "none";
-      selected = [];
-      answered = false;
+      selectedOption = null;
     }
 
-    function toggleOption(element, index) {
-      if (answered) return;
-
-      if (selected.indexOf(index) !== -1) {
-        selected = selected.filter(function (i) {
-          return i !== index;
-        });
-        element.classList.remove("selected");
-      } else {
-        selected.push(index);
-        element.classList.add("selected");
-      }
-
-      document.getElementById("submit-btn").disabled = selected.length === 0;
+    function selectOption(element, key) {
+      document.querySelectorAll(".option").forEach(function (opt) {
+        opt.classList.remove("selected");
+      });
+      element.classList.add("selected");
+      selectedOption = key;
+      document.getElementById("submit-btn").disabled = false;
     }
 
     document.getElementById("submit-btn").onclick = function () {
-      if (selected.length === 0 || answered) return;
-      answered = true;
+      if (!selectedOption) return;
 
-      var q = questions[currentIndex];
-      var options = document.querySelectorAll(".option");
-      var feedback = document.getElementById("feedback");
-
-      var selectedSorted = selected.slice().sort(function (a, b) {
-        return a - b;
-      });
-      var correctSorted = q.correct.slice().sort(function (a, b) {
-        return a - b;
-      });
-      var isCorrect = JSON.stringify(selectedSorted) === JSON.stringify(correctSorted);
-
-      options.forEach(function (opt, i) {
-        if (q.correct.indexOf(i) !== -1) {
-          opt.classList.add("correct");
-        } else if (selected.indexOf(i) !== -1) {
-          opt.classList.add("wrong");
-        }
-      });
-
-      if (isCorrect) {
-        feedback.textContent = t("correct");
-        feedback.className = "feedback correct";
-        correctAnswers++;
-      } else {
-        feedback.textContent = t("wrong");
-        feedback.className = "feedback wrong";
-        lives = lives - 1;
-        updateLives();
-      }
+      answers.push({ question_id: questions[currentIndex].id, chosen_option: selectedOption });
 
       document.getElementById("submit-btn").style.display = "none";
       document.getElementById("next-btn").style.display = "block";
-
-      if (lives <= 0 || currentIndex === 9) {
-        document.getElementById("next-btn").textContent = t("seeResults");
-      } else {
-        document.getElementById("next-btn").textContent = t("nextQuestion");
-      }
+      document.getElementById("next-btn").textContent =
+        currentIndex === questions.length - 1 ? t("seeResults") : t("nextQuestion");
     };
 
     document.getElementById("next-btn").onclick = async function () {
-      if (lives <= 0 || currentIndex === 9) {
-        var finalScore = correctAnswers * 10;
-        await saveScoreToDatabase(getCurrentUser(), finalScore);
-        showResults(finalScore);
+      if (currentIndex === questions.length - 1) {
+        await finishQuiz();
       } else {
         currentIndex++;
         showQuestion();
       }
     };
 
-    function showResults(finalScore) {
+    async function finishQuiz() {
       document.getElementById("quiz-screen").style.display = "none";
+
+      try {
+        var result = await submitQuizAnswers(answers);
+        showResults(result);
+      } catch (err) {
+        document.getElementById("result-screen").style.display = "block";
+        var error = document.getElementById("quiz-error");
+        error.textContent = "Failed to submit your answers";
+        error.style.display = "block";
+      }
+    }
+
+    function showResults(result) {
       document.getElementById("result-screen").style.display = "block";
-      document.getElementById("correct-count").textContent = correctAnswers;
-      document.getElementById("remaining-lives").innerHTML = hearts(lives);
-      document.getElementById("total-score").textContent = finalScore;
+      document.getElementById("correct-count").textContent = result.correct_answers;
+      document.getElementById("remaining-lives").innerHTML = hearts(result.lives_remaining);
+      document.getElementById("total-score").textContent = result.score;
     }
 
     function updateQuizLanguage() {
@@ -217,9 +187,8 @@
       }
 
       if (nextBtn && nextBtn.style.display !== "none") {
-        nextBtn.textContent = (lives <= 0 || currentIndex === 9)
-          ? t("seeResults")
-          : t("nextQuestion");
+        nextBtn.textContent =
+          currentIndex === questions.length - 1 ? t("seeResults") : t("nextQuestion");
       }
     }
 

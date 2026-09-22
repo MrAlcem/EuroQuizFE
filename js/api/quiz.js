@@ -1,32 +1,31 @@
 // ==============================
-// QUIZ → MyDatabase
+// QUIZ → API
 // ==============================
 
-async function getQuestionsFromMyDatabase() {
-    // ← put the real connection to MyDatabase here
-    // const res = await authFetch("/questions?limit=10");
-    // return await res.json();
+// GET /quiz/start → 10 questions, each with id, text and options {A,B,C,D}.
+// The correct option is never sent to the client.
+async function fetchQuizQuestions() {
+    var res = await authFetch(API_BASE + "/quiz/start", { method: "GET" });
 
-    return [
-        { text: "Which of these are programming languages? (Select all)", options: ["Python", "HTML", "JavaScript", "CSS"], correct: [0, 2] },
-        { text: "Which planets are gas giants?", options: ["Earth", "Jupiter", "Mars", "Saturn"], correct: [1, 3] },
-        { text: "Which are primary colors?", options: ["Red", "Green", "Blue", "Yellow"], correct: [0, 2] },
-        { text: "Which animals are mammals?", options: ["Shark", "Dolphin", "Eagle", "Bat"], correct: [1, 3] },
-        { text: "Which are fruits?", options: ["Carrot", "Apple", "Potato", "Banana"], correct: [1, 3] },
-        { text: "Which countries are in Europe?", options: ["Brazil", "France", "Japan", "Germany"], correct: [1, 3] },
-        { text: "Which are even numbers?", options: ["3", "4", "7", "8"], correct: [1, 3] },
-        { text: "Which metals are precious?", options: ["Iron", "Gold", "Copper", "Silver"], correct: [1, 3] },
-        { text: "Which are web browsers?", options: ["Chrome", "Word", "Firefox", "Excel"], correct: [0, 2] },
-        { text: "Which are oceans?", options: ["Pacific", "Amazon", "Atlantic", "Nile"], correct: [0, 2] }
-    ];
+    if (!res.ok) {
+        throw new Error("Failed to load questions");
+    }
+
+    var body = await res.json();
+    return body.data;
 }
 
-async function saveScoreToDatabase(username, score) {
-    // ← put the real connection to MyDatabase here
-    // await authFetch("/save-score", {
-    //   method: "POST",
-    //   body: JSON.stringify({ username, score })
-    // });
+// POST /quiz/submit with the full batch of { question_id, chosen_option }
+// answers. Returns the server-computed { score, correct_answers, lives_remaining }.
+async function submitQuizAnswers(answers) {
+    var res = await authFetch(API_BASE + "/quiz/submit", {
+        method: "POST",
+        body: JSON.stringify({ answers: answers })
+    });
 
-    console.log("Saved to MyDatabase → " + username + ": " + score);
+    if (!res.ok) {
+        throw new Error("Failed to submit answers");
+    }
+
+    return await res.json();
 }
