@@ -24,25 +24,37 @@
         <p class="subtitle" data-i18n="chooseWhat">Choose what you want to do</p>
 
         <div class="menu-actions">
-            <a href="Quiz.html" class="menu-card">
+            <a href="../screens/Quiz.html" class="menu-card">
                 <span class="menu-title" data-i18n="startQuiz">Start Quiz</span>
                 <span class="menu-desc" data-i18n="quizDescription">10 questions · 3 lives</span>
             </a>
-            <a href="Leaderboard.html" class="menu-card secondary">
+            <a href="../screens/Leaderboard.html" class="menu-card secondary">
                 <span class="menu-title" data-i18n="leaderboard">Leaderboard</span>
                 <span class="menu-desc" data-i18n="leaderboardDescription">See top players by score</span>
             </a>
-            <a href="Profile.html" class="menu-card secondary">
+            <a href="../screens/Profile.html" class="menu-card secondary">
                 <span class="menu-title" data-i18n="myProfile">My Profile</span>
                 <span class="menu-desc" data-i18n="profileDescription">Personal score and quiz history</span>
             </a>
-            <a href="Options.html" class="menu-card secondary">
+            <a href="../screens/Options.html" class="menu-card secondary">
                 <span class="menu-title" data-i18n="options">Options</span>
             </a>
         </div>
     </div>
 
-    <script src="../js/App.js"></script>
+    <!-- Core -->
+    <script src="../js/session.js"></script>
+
+    <!-- API layer -->
+    <script src="../js/api/auth.js"></script>
+    <script src="../js/api/quiz.js"></script>
+    <script src="../js/api/leaderboard.js"></script>
+    <script src="../js/api/profile.js"></script>
+
+    <!-- UI helpers -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/setup.js"></script>
     <script>
         requireLogin();
         document.getElementById("username-display").textContent = getCurrentUser();

@@ -45,7 +45,19 @@
         <a href="login.html" class="btn-text" style="margin-top: 16px;">Already have an account? Log in</a>
     </div>
 
-    <script src="../js/App.js"></script>
+    <!-- Core -->
+    <script src="../js/session.js"></script>
+
+    <!-- API layer -->
+    <script src="../js/api/auth.js"></script>
+    <script src="../js/api/quiz.js"></script>
+    <script src="../js/api/leaderboard.js"></script>
+    <script src="../js/api/profile.js"></script>
+
+    <!-- UI helpers -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/setup.js"></script>
     <script>
         redirectIfLoggedIn();
         setupSiteSettings();
