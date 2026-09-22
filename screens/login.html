@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/Main.css">
 </head>
+
 <body>
+    <div class="container">
+        <button id="dark-mode-toggle" type="button"></button>
+        <a href="Options.html" class="btn-text" data-i18n="options">Options</a>
 
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="you@example.nl" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="**********" required><br><br>
-        <button type="submit">Log in and start the quiz</button>
+        <h1>Welcome</h1>
+        <p class="subtitle">Login to play the quiz</p>
 
-        <p class="switch">Dont have an account yet? <a href="register.html">Register here</a></p>
-        
-    </form>
-  </section>
- 
+        <form id="auth-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <button type="submit" class="btn-main">Login</button>
+        </form>
+    </div>
+
+    <script src="../js/App.js"></script>
+    <script>
+        redirectIfLoggedIn();
+        setupSiteSettings();
+    </script>
 </body>
+
 </html>

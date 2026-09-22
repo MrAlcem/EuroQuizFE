@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard</title>
+  <link rel="stylesheet" href="../styles/Main.css">
+</head>
+
+<body>
+  <div class="container">
+    <button id="dark-mode-toggle" type="button"></button>
+
+    <div class="top-bar">
+      <a href="Index.html" class="btn-text" data-i18n="home">Home</a>
+      <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+    </div>
+
+    <h1 data-i18n="leaderboard">Leaderboard</h1>
+    <p class="subtitle" data-i18n="topPlayers">Top players by score</p>
+
+    <div class="leaderboard-scroll" id="leaderboard-list">
+      <div class="loading" data-i18n="loading">Loading...</div>
+    </div>
+
+    <div class="you-panel" id="you-panel" style="display:none;">
+      <div class="you-label" data-i18n="yourPosition">Your position</div>
+      <div class="player current-user" id="you-row"></div>
+    </div>
+
+    <a href="Quiz.html" class="btn-secondary" data-i18n="startQuizButton">Start Quiz</a>
+  </div>
+
+  <script src="../js/App.js"></script>
+  <script>
+    requireLogin();
+    document.getElementById("logout-btn").addEventListener("click", logout);
+
+    async function loadLeaderboard() {
+      var list = document.getElementById("leaderboard-list");
+      var youPanel = document.getElementById("you-panel");
+      var youRow = document.getElementById("you-row");
+      var currentUser = getCurrentUser();
+
+      try {
+        var players = await getLeaderboard();
+        players.sort(function (a, b) { return b.score - a.score; });
+        list.innerHTML = "";
+
+        if (players.length === 0) {
+          list.innerHTML = '<div class="error-inline">' + t("noScores") + '</div>';
+          youPanel.style.display = "none";
+          return;
+        }
+
+        var myRank = null;
+        var myPlayer = null;
+
+        players.forEach(function (player, index) {
+          var rank = index + 1;
+          var isMe = player.name === currentUser;
+
+          if (isMe) {
+            myRank = rank;
+            myPlayer = player;
+          }
+
+          var div = document.createElement("div");
+          div.className = isMe ? "player current-user in-list" : "player";
+          div.innerHTML =
+            '<div class="rank">#' + rank + "</div>" +
+            '<div class="name">' + player.name + (isMe ? " " + t("you") : "") + "</div>" +
+            '<div class="score">' + player.score + "</div>";
+          list.appendChild(div);
+        });
+
+        if (myPlayer) {
+          youRow.innerHTML =
+            '<div class="rank">#' + myRank + "</div>" +
+            '<div class="name">' + myPlayer.name + " " + t("you") + "</div>" +
+            '<div class="score">' + myPlayer.score + "</div>";
+        } else {
+          youRow.innerHTML =
+            '<div class="rank">—</div>' +
+            '<div class="name">' + currentUser + " " + t("you") + "</div>" +
+            '<div class="score">' + t("noScoreYet") + "</div>";
+        }
+
+        youPanel.style.display = "block";
+      } catch (err) {
+        list.innerHTML = '<div class="error-inline">' + t("failedLeaderboard") + '</div>';
+        youPanel.style.display = "none";
+      }
+    }
+
+    setupSiteSettings();
+    loadLeaderboard();
+  </script>
+</body>
+
+</html>

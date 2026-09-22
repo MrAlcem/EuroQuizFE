@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App - Options</title>
+  <link rel="stylesheet" href="../styles/Main.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="Index.html" class="btn-text" data-i18n="home">Home</a>
+      <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+    </div>
+
+    <h1 data-i18n="options">Options</h1>
+
+    <div class="settings-group">
+      <label class="settings-label" for="language-select" data-i18n="language">Language</label>
+      <select id="language-select">
+        <option value="en" data-i18n="english">English</option>
+        <option value="hr" data-i18n="croatian">Croatian</option>
+      </select>
+    </div>
+
+    <button id="dark-mode-toggle" type="button"></button>
+  </div>
+
+  <script src="../js/App.js"></script>
+  <script>
+    requireLogin();
+    document.getElementById("logout-btn").addEventListener("click", logout);
+    setupSiteSettings();
+  </script>
+</body>
+
+</html>

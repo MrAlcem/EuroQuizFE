@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Screen</title>
-    <link rel="stylesheet" href="../styles/index.css">
+    <title>Home</title>
+    <link rel="stylesheet" href="../styles/Main.css">
 </head>
 
 <body>
@@ -24,6 +24,46 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/quiz.js"></script>
+    <div class="container">
+        <button id="dark-mode-toggle" type="button"></button>
+
+        <div class="top-bar">
+            <div class="user-chip">
+                <span class="user-label" data-i18n="signedInAs">Signed in as</span>
+                <strong id="username-display">...</strong>
+            </div>
+            <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+        </div>
+
+        <h1 data-i18n="quizChallenge">Quiz Challenge</h1>
+        <p class="subtitle" data-i18n="chooseWhat">Choose what you want to do</p>
+
+        <div class="menu-actions">
+            <a href="Quiz.html" class="menu-card">
+                <span class="menu-title" data-i18n="startQuiz">Start Quiz</span>
+                <span class="menu-desc" data-i18n="quizDescription">10 questions · 3 lives · multi-select</span>
+            </a>
+            <a href="Leaderboard.html" class="menu-card secondary">
+                <span class="menu-title" data-i18n="leaderboard">Leaderboard</span>
+                <span class="menu-desc" data-i18n="leaderboardDescription">See top players by score</span>
+            </a>
+            <a href="Profile.html" class="menu-card secondary">
+                <span class="menu-title" data-i18n="myProfile">My Profile</span>
+                <span class="menu-desc" data-i18n="profileDescription">Personal score and quiz history</span>
+            </a>
+            <a href="Options.html" class="menu-card secondary">
+                <span class="menu-title" data-i18n="options">Options</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/App.js"></script>
+    <script>
+        requireLogin();
+        document.getElementById("username-display").textContent = getCurrentUser();
+        document.getElementById("logout-btn").addEventListener("click", logout);
+        setupSiteSettings();
+    </script>
 </body>
 
 </html>
