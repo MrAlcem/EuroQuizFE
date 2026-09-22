@@ -18,8 +18,8 @@
 
         <form id="auth-form">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
             </div>
 
             <div class="form-group">
@@ -27,14 +27,77 @@
                 <input type="password" id="password" required>
             </div>
 
-            <button type="submit" class="btn-main">Login</button>
+            <div class="form-group" id="mfa-group" style="display:none;">
+                <label for="mfa-code">6-digit code</label>
+                <input type="text" id="mfa-code" inputmode="numeric" pattern="[0-9]*" maxlength="6">
+            </div>
+
+            <div class="error-inline" id="auth-error" style="display:none;"></div>
+
+            <button type="submit" class="btn-main" id="auth-submit">Login</button>
         </form>
+
+        <a href="Register.html" class="btn-text" style="margin-top: 16px;">Create an account</a>
     </div>
 
     <script src="../js/App.js"></script>
     <script>
         redirectIfLoggedIn();
         setupSiteSettings();
+
+        var pendingChallengeToken = null;
+
+        function showError(message) {
+            var error = document.getElementById("auth-error");
+            error.textContent = message;
+            error.style.display = "block";
+        }
+
+        document.getElementById("auth-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value;
+            var submitBtn = document.getElementById("auth-submit");
+
+            document.getElementById("auth-error").style.display = "none";
+            submitBtn.disabled = true;
+
+            try {
+                if (pendingChallengeToken) {
+                    var code = document.getElementById("mfa-code").value.trim();
+                    var mfaResult = await verifyMfaCode(pendingChallengeToken, code);
+
+                    if (!mfaResult.success) {
+                        showError(mfaResult.message || "Invalid code");
+                        return;
+                    }
+
+                    saveSession(mfaResult);
+                    window.location.href = "Index.html";
+                    return;
+                }
+
+                var result = await loginUser(email, password);
+
+                if (result.mfaRequired) {
+                    pendingChallengeToken = result.challengeToken;
+                    document.getElementById("mfa-group").style.display = "block";
+                    document.getElementById("auth-submit").textContent = "Verify code";
+                    return;
+                }
+
+                if (!result.success) {
+                    showError(result.message || "Login failed");
+                    return;
+                }
+
+                saveSession(result);
+                window.location.href = "Index.html";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
     </script>
 </body>
 
