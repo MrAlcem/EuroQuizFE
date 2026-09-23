@@ -21,14 +21,14 @@
     <p class="subtitle" id="profile-subtitle" data-i18n="loading">Loading...</p>
 
     <div class="stat" data-i18n="bestScore">Best score: <strong id="best-score">-</strong></div>
-    <div class="stat">Total score: <strong id="total-score">-</strong></div>
+    <div class="stat" data-i18n="totalScore">Total score: <strong id="total-score">-</strong></div>
     <div class="stat">Level: <strong id="profile-level">-</strong></div>
     <div class="stat">Email: <strong id="profile-email">-</strong></div>
 
     <h2 class="history-title" data-i18n="quizHistory">Quiz history</h2>
-    <p class="subtitle" style="margin-top:-8px;">Click a quiz to review your answers.</p>
+    <p class="subtitle" style="margin-top:-8px;" data-i18n="historyDescription">Click a quiz to review your answers.</p>
     <div id="history-list">
-      <div class="loading">Loading...</div>
+      <div class="loading" data-i18n="loading">Loading...</div>
     </div>
     <div id="result-detail"></div>
 
@@ -85,13 +85,13 @@
           list.appendChild(div);
         });
       } catch (err) {
-        list.innerHTML = '<div class="error-inline">Failed to load profile</div>';
+        list.innerHTML = '<div class="error-inline" data-i18n="failedProfile">Failed to load profile</div>';
       }
     }
 
     async function showResultDetail(resultId) {
       var detail = document.getElementById("result-detail");
-      detail.innerHTML = '<div class="loading">Loading...</div>';
+      detail.innerHTML = '<div class="loading" data-i18n="loading">Loading...</div>';
 
       try {
         var result = await getResultDetails(resultId);
@@ -110,7 +110,7 @@
         });
         detail.innerHTML = html;
       } catch (err) {
-        detail.innerHTML = '<div class="error-inline">Failed to load answers</div>';
+        detail.innerHTML = '<div class="error-inline" data-i18n="failedProfile">Failed to load answers</div>';
       }
     }
 
