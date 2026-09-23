@@ -21,12 +21,16 @@
     <p class="subtitle" id="profile-subtitle" data-i18n="loading">Loading...</p>
 
     <div class="stat" data-i18n="bestScore">Best score: <strong id="best-score">-</strong></div>
+    <div class="stat">Total score: <strong id="total-score">-</strong></div>
+    <div class="stat">Level: <strong id="profile-level">-</strong></div>
     <div class="stat">Email: <strong id="profile-email">-</strong></div>
 
     <h2 class="history-title" data-i18n="quizHistory">Quiz history</h2>
+    <p class="subtitle" style="margin-top:-8px;">Click a quiz to review your answers.</p>
     <div id="history-list">
       <div class="loading">Loading...</div>
     </div>
+    <div id="result-detail"></div>
 
     <a href="Quiz.html" class="btn-main" style="margin-top: 20px;" data-i18n="startQuizButton">Start Quiz</a>
     <a href="Leaderboard.html" class="btn-secondary" data-i18n="leaderboard">Leaderboard</a>
@@ -50,15 +54,15 @@
     document.getElementById("logout-btn").addEventListener("click", logout);
 
     async function loadProfile() {
-      var userId = getCurrentUserId() || getCurrentUser();
       var list = document.getElementById("history-list");
 
       try {
-        // GET /users/{id}
-        var profile = await getUserProfile(userId);
+        var profile = await getUserProfile();
 
         document.getElementById("profile-subtitle").textContent = profile.username || getCurrentUser();
-        document.getElementById("best-score").textContent = profile.bestScore;
+        document.getElementById("best-score").textContent = profile.best_score;
+        document.getElementById("total-score").textContent = profile.total_score;
+        document.getElementById("profile-level").textContent = profile.level || "-";
         document.getElementById("profile-email").textContent = profile.email || "-";
 
         list.innerHTML = "";
@@ -70,14 +74,42 @@
 
         profile.history.forEach(function (item) {
           var div = document.createElement("div");
-          div.className = "player";
+          div.className = "player history-item";
           div.innerHTML =
-            '<div class="name">' + (item.date || "Unknown date") + "</div>" +
+            '<div class="name">' + (item.date || "Unknown date") + (item.daily ? " · Daily" : "") + "</div>" +
             '<div class="score">' + item.score + "</div>";
+          div.addEventListener("click", function () {
+            showResultDetail(item.id);
+          });
           list.appendChild(div);
         });
       } catch (err) {
         list.innerHTML = '<div class="error-inline">Failed to load profile</div>';
+      }
+    }
+
+    async function showResultDetail(resultId) {
+      var detail = document.getElementById("result-detail");
+      detail.innerHTML = '<div class="loading">Loading...</div>';
+
+      try {
+        var result = await getResultDetails(resultId);
+
+        var html = "<h2 class=\"history-title\">Answers</h2>";
+        result.answers.forEach(function (answer) {
+          html += '<div class="answer-review ' + (answer.is_correct ? "correct" : "wrong") + '">' +
+            '<div class="answer-question">' + answer.question_text + "</div>" +
+            '<div class="answer-detail">Your answer: ' +
+            (answer.chosen_option ? answer.chosen_option + ". " + answer.options[answer.chosen_option] : "(no answer)") +
+            "</div>" +
+            (answer.is_correct ? "" : '<div class="answer-detail">Correct answer: ' +
+              answer.correct_option + ". " + answer.options[answer.correct_option] + "</div>") +
+            '<div class="answer-points">+' + answer.points_awarded + " pts</div>" +
+            "</div>";
+        });
+        detail.innerHTML = html;
+      } catch (err) {
+        detail.innerHTML = '<div class="error-inline">Failed to load answers</div>';
       }
     }
 

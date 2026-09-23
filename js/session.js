@@ -25,12 +25,12 @@ function getCurrentRole() {
 }
 
 function isAdmin() {
-    return getCurrentRole() === "ROLE_Admin";
+    return getCurrentRole() === "admin";
 }
 
 function requireAdmin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/Login.html";
+        window.location.href = "../screens/login.html";
         return;
     }
     if (!isAdmin()) {
@@ -48,7 +48,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/Login.html";
+        window.location.href = "../screens/login.html";
     }
 }
 

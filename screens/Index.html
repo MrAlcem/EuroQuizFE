@@ -11,19 +11,6 @@
 
 <body>
 
-    <p id="quiz-error" class="error" hidden></p>
-
-    <div id="question-card" hidden>
-        <p id="quiz-progress"></p>
-        <h2 id="question-text"></h2>
-        <div id="question-options"></div>
-        <button id="next-btn" type="button">Next question</button>
-    </div>
-
-    <div id="quiz-result" hidden></div>
-
-    <script src="../js/api.js"></script>
-    <script src="../js/quiz.js"></script>
     <div class="container">
         <button id="dark-mode-toggle" type="button"></button>
 
@@ -38,8 +25,25 @@
         <h1 data-i18n="quizChallenge">Quiz Challenge</h1>
         <p class="subtitle" data-i18n="chooseWhat">Choose what you want to do</p>
 
+        <div class="quiz-filters">
+            <label for="quiz-category-select">Category</label>
+            <select id="quiz-category-select">
+                <option value="">Any category</option>
+                <option value="Geography">Geography</option>
+                <option value="Nature">Nature</option>
+                <option value="History">History</option>
+                <option value="Culture">Culture</option>
+            </select>
+            <label for="quiz-country-select">Country</label>
+            <select id="quiz-country-select">
+                <option value="">Any country</option>
+                <option value="NL">Netherlands</option>
+                <option value="HR">Croatia</option>
+            </select>
+        </div>
+
         <div class="menu-actions">
-            <a href="../screens/Quiz.html" class="menu-card">
+            <a href="../screens/Quiz.html" id="start-quiz-link" class="menu-card">
                 <span class="menu-title" data-i18n="startQuiz">Start Quiz</span>
                 <span class="menu-desc" data-i18n="quizDescription">10 questions · 3 lives</span>
             </a>
@@ -79,6 +83,20 @@
         document.getElementById("username-display").textContent = getCurrentUser();
         document.getElementById("logout-btn").addEventListener("click", logout);
         setupSiteSettings();
+
+        function updateStartQuizLink() {
+            var category = document.getElementById("quiz-category-select").value;
+            var country = document.getElementById("quiz-country-select").value;
+            var params = new URLSearchParams();
+            if (category) params.set("category", category);
+            if (country) params.set("country", country);
+            var query = params.toString();
+            document.getElementById("start-quiz-link").href =
+                "../screens/Quiz.html" + (query ? "?" + query : "");
+        }
+
+        document.getElementById("quiz-category-select").addEventListener("change", updateStartQuizLink);
+        document.getElementById("quiz-country-select").addEventListener("change", updateStartQuizLink);
     </script>
 </body>
 
