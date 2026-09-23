@@ -1,0 +1,48 @@
+.stat {
+    font-size: 17px;
+    margin: 10px 0;
+    color: #475569;
+}
+
+.stat strong {
+    color: #1e293b;
+}
+
+.history-title {
+    margin-top: 28px;
+    margin-bottom: 12px;
+    font-size: 18px;
+}
+
+/* Reuse player styles from leaderboard for history items */
+.player {
+    display: flex;
+    align-items: center;
+    background: #e2e8f0;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.name {
+    flex: 1;
+}
+
+.score {
+    font-weight: 700;
+    font-size: 17px;
+}
+
+/* Dark mode */
+body.dark-mode .stat {
+    color: #cbd5e1;
+}
+
+body.dark-mode .stat strong {
+    color: #f1f5f9;
+}
+
+body.dark-mode .player {
+    background: #334155;
+    color: #f1f5f9;
+}

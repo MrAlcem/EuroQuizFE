@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App - Quiz</title>
+  <link rel="stylesheet" href="../styles/Main.css">
+  <link rel="stylesheet" href="../styles/Quiz.css">
+</head>
+
+<body>
+  <div class="container">
+    <button id="dark-mode-toggle" type="button"></button>
+    <a href="Options.html" class="btn-text" data-i18n="options">Options</a>
+    <div id="quiz-screen">
+      <div class="top-bar">
+        <a href="Index.html" class="btn-text" data-i18n="home">Home</a>
+        <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+      </div>
+
+      <div class="header">
+        <div><span data-i18n="question">Question</span> <strong id="current">1</strong>/<span id="total">10</span></div>
+      </div>
+
+      <div class="question" id="question-text">Loading...</div>
+      <div id="options"></div>
+      <div class="error-inline" id="quiz-error" style="display:none;"></div>
+
+      <button type="button" class="btn-main" id="submit-btn" disabled data-i18n="submitAnswer">Submit Answer</button>
+      <button type="button" class="btn-main" id="next-btn" style="display:none;" data-i18n="nextQuestion">Next
+        Question</button>
+    </div>
+
+    <div id="result-screen">
+      <h1 data-i18n="quizFinished">Quiz Finished</h1>
+      <div class="stat"><span data-i18n="correctAnswers">Correct answers:</span> <strong id="correct-count">0</strong>
+      </div>
+      <div class="stat"><span data-i18n="remainingLives">Remaining lives:</span> <span id="remaining-lives"></span>
+      </div>
+      <div class="stat"><span data-i18n="totalScore">Total score:</span> <strong id="total-score">0</strong></div>
+      <button type="button" class="btn-main" id="play-again-btn" style="margin-top: 24px;" data-i18n="playAgain">Play
+        Again</button>
+      <a href="Leaderboard.html" class="btn-secondary" data-i18n="viewLeaderboard">View Leaderboard</a>
+      <a href="Index.html" class="btn-secondary" data-i18n="backHome">Back to Home</a>
+    </div>
+  </div>
+
+  <!-- Core -->
+  <script src="../js/session.js"></script>
+
+  <!-- API layer -->
+  <script src="../js/api/auth.js"></script>
+  <script src="../js/api/quiz.js"></script>
+  <script src="../js/api/leaderboard.js"></script>
+  <script src="../js/api/profile.js"></script>
+
+  <!-- UI helpers -->
+  <script src="../js/i18n.js"></script>
+  <script src="../js/dark-mode.js"></script>
+  <script src="../js/setup.js"></script>
+  <script>
+    requireLogin();
+    document.getElementById("logout-btn").addEventListener("click", logout);
+
+    var currentIndex = 0;
+    var questions = [];
+    var answers = [];
+    var selectedOption = null;
+
+    function hearts(n) {
+      var html = "";
+      for (var i = 0; i < 3; i++) {
+        if (i < n) {
+          html += '<img src="heart.svg" alt="life" class="life-heart">';
+        } else {
+          html += '<img src="heart-empty.svg" alt="lost" class="life-heart">';
+        }
+      }
+      return html;
+    }
+
+    async function startQuiz() {
+      currentIndex = 0;
+      answers = [];
+      selectedOption = null;
+
+      document.getElementById("quiz-screen").style.display = "block";
+      document.getElementById("result-screen").style.display = "none";
+      document.getElementById("quiz-error").style.display = "none";
+
+      try {
+        questions = await fetchQuizQuestions();
+      } catch (err) {
+        document.getElementById("question-text").textContent = "";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("submit-btn").style.display = "none";
+        var error = document.getElementById("quiz-error");
+        error.textContent = "Failed to load questions";
+        error.style.display = "block";
+        return;
+      }
+
+      document.getElementById("total").textContent = questions.length;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      var q = questions[currentIndex];
+      document.getElementById("question-text").textContent = q.text;
+      document.getElementById("current").textContent = currentIndex + 1;
+
+      var optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+
+      ["A", "B", "C", "D"].forEach(function (key) {
+        var div = document.createElement("div");
+        div.className = "option";
+        div.textContent = q.options[key];
+        div.onclick = function () {
+          selectOption(div, key);
+        };
+        optionsDiv.appendChild(div);
+      });
+
+      document.getElementById("submit-btn").style.display = "block";
+      document.getElementById("submit-btn").disabled = true;
+      document.getElementById("next-btn").style.display = "none";
+      selectedOption = null;
+    }
+
+    function selectOption(element, key) {
+      document.querySelectorAll(".option").forEach(function (opt) {
+        opt.classList.remove("selected");
+      });
+      element.classList.add("selected");
+      selectedOption = key;
+      document.getElementById("submit-btn").disabled = false;
+    }
+
+    document.getElementById("submit-btn").onclick = function () {
+      if (!selectedOption) return;
+
+      answers.push({ question_id: questions[currentIndex].id, chosen_option: selectedOption });
+
+      document.getElementById("submit-btn").style.display = "none";
+      document.getElementById("next-btn").style.display = "block";
+      document.getElementById("next-btn").textContent =
+        currentIndex === questions.length - 1 ? t("seeResults") : t("nextQuestion");
+    };
+
+    document.getElementById("next-btn").onclick = async function () {
+      if (currentIndex === questions.length - 1) {
+        await finishQuiz();
+      } else {
+        currentIndex++;
+        showQuestion();
+      }
+    };
+
+    async function finishQuiz() {
+      document.getElementById("quiz-screen").style.display = "none";
+
+      try {
+        var result = await submitQuizAnswers(answers);
+        showResults(result);
+      } catch (err) {
+        document.getElementById("result-screen").style.display = "block";
+        var error = document.getElementById("quiz-error");
+        error.textContent = "Failed to submit your answers";
+        error.style.display = "block";
+      }
+    }
+
+    function showResults(result) {
+      document.getElementById("result-screen").style.display = "block";
+      document.getElementById("correct-count").textContent = result.correct_answers;
+      document.getElementById("remaining-lives").innerHTML = hearts(result.lives_remaining);
+      document.getElementById("total-score").textContent = result.score;
+    }
+
+    function updateQuizLanguage() {
+      var submitBtn = document.getElementById("submit-btn");
+      var nextBtn = document.getElementById("next-btn");
+
+      if (submitBtn && submitBtn.style.display !== "none") {
+        submitBtn.textContent = t("submitAnswer");
+      }
+
+      if (nextBtn && nextBtn.style.display !== "none") {
+        nextBtn.textContent =
+          currentIndex === questions.length - 1 ? t("seeResults") : t("nextQuestion");
+      }
+    }
+
+    document.getElementById("play-again-btn").onclick = startQuiz;
+
+    setupSiteSettings();
+    startQuiz();
+  </script>
+</body>
+
+</html>

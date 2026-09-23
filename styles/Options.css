@@ -1,0 +1,32 @@
+.settings-group {
+    margin-bottom: 22px;
+}
+
+.settings-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#language-select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1e293b;
+    font: inherit;
+}
+
+/* Dark mode */
+body.dark-mode .settings-label {
+    color: #94a3b8;
+}
+
+body.dark-mode #language-select {
+    background: #0f172a;
+    color: #f1f5f9;
+    border-color: #334155;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz App - Profile</title>
+  <link rel="stylesheet" href="../styles/Main.css">
+  <link rel="stylesheet" href="../styles/Profile.css">
+</head>
+
+<body>
+  <div class="container">
+    <button id="dark-mode-toggle" type="button">🌙 Dark Mode</button>
+    <div class="top-bar">
+      <a href="Index.html" class="btn-text">Home</a>
+      <button type="button" class="btn-text" id="logout-btn">Logout</button>
+    </div>
+
+    <h1>My Profile</h1>
+    <p class="subtitle" id="profile-subtitle">Loading...</p>
+
+    <div class="stat">Best score: <strong id="best-score">-</strong></div>
+    <div class="stat">Email: <strong id="profile-email">-</strong></div>
+
+    <h2 class="history-title">Quiz history</h2>
+    <div id="history-list">
+      <div class="loading">Loading...</div>
+    </div>
+
+    <a href="Quiz.html" class="btn-main" style="margin-top: 20px;">Start Quiz</a>
+    <a href="Leaderboard.html" class="btn-secondary">Leaderboard</a>
+  </div>
+
+  <!-- Core -->
+  <script src="../js/session.js"></script>
+
+  <!-- API layer -->
+  <script src="../js/api/auth.js"></script>
+  <script src="../js/api/quiz.js"></script>
+  <script src="../js/api/leaderboard.js"></script>
+  <script src="../js/api/profile.js"></script>
+
+  <!-- UI helpers -->
+  <script src="../js/i18n.js"></script>
+  <script src="../js/dark-mode.js"></script>
+  <script src="../js/setup.js"></script>
+  <script>
+    requireLogin();
+    document.getElementById("logout-btn").addEventListener("click", logout);
+
+    async function loadProfile() {
+      var userId = getCurrentUserId() || getCurrentUser();
+      var list = document.getElementById("history-list");
+
+      try {
+        // GET /users/{id}
+        var profile = await getUserProfile(userId);
+
+        document.getElementById("profile-subtitle").textContent = profile.username || getCurrentUser();
+        document.getElementById("best-score").textContent = profile.bestScore;
+        document.getElementById("profile-email").textContent = profile.email || "-";
+
+        list.innerHTML = "";
+
+        if (!profile.history || profile.history.length === 0) {
+          list.innerHTML = '<div class="error-inline">No quiz history yet</div>';
+          return;
+        }
+
+        profile.history.forEach(function (item) {
+          var div = document.createElement("div");
+          div.className = "player";
+          div.innerHTML =
+            '<div class="name">' + (item.date || "Unknown date") + "</div>" +
+            '<div class="score">' + item.score + "</div>";
+          list.appendChild(div);
+        });
+      } catch (err) {
+        list.innerHTML = '<div class="error-inline">Failed to load profile</div>';
+      }
+    }
+
+    loadProfile();
+    setupDarkMode();
+  </script>
+</body>
+
+</html>

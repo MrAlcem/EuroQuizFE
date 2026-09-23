@@ -1,40 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="../styles/login-register.css">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="../styles/Main.css">
+    <link rel="stylesheet" href="../styles/Login.css">
 </head>
+
 <body>
+    <div class="container">
+        <button id="dark-mode-toggle" type="button"></button>
+        <a href="Options.html" class="btn-text" data-i18n="options">Options</a>
 
-    <div class="auth-wrapper">
-        <div class="logo">
-            <div class="logo-icon">EQ</div>
-            <div class="logo-text">EuroQuiz</div>
-        </div>
+        <h1 id="page-title">Welcome</h1>
+        <p class="subtitle" id="page-subtitle">Login to play the quiz</p>
 
-        <div class="auth-card">
-            <h1>Log in</h1>
-            <p class="subtitle">Welcome back — log in to start your quiz.</p>
+        <form id="auth-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
 
-            <form action="/login" method="POST">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="you@example.nl" required>
-                </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="**********" required>
-                </div>
+            <div class="form-group" id="mfa-group" style="display:none;">
+                <label for="mfa-code">6-digit code</label>
+                <input type="text" id="mfa-code" inputmode="numeric" pattern="[0-9]*" maxlength="6">
+            </div>
 
-                <button type="submit" class="btn-primary">Log in and start the quiz</button>
-            </form>
+            <div class="error-inline" id="auth-error" style="display:none;"></div>
 
-            <p class="switch">Dont have an account yet? <a href="register.html">Register here</a></p>
-        </div>
+            <button type="submit" class="btn-main" id="auth-submit">Login</button>
+        </form>
+
+        <a href="Register.html" class="btn-text" style="margin-top: 16px;">Create an account</a>
     </div>
 
+    <!-- Core -->
+    <script src="../js/session.js"></script>
+
+    <!-- API layer -->
+    <script src="../js/api/auth.js"></script>
+    <script src="../js/api/quiz.js"></script>
+    <script src="../js/api/leaderboard.js"></script>
+    <script src="../js/api/profile.js"></script>
+
+    <!-- UI helpers -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/setup.js"></script>
+
+    <script>
+        // Already logged in? → go to home
+        redirectIfLoggedIn();
+        setupSiteSettings();
+
+        var pendingChallengeToken = null;
+
+        function showError(message) {
+            var error = document.getElementById("auth-error");
+            error.textContent = message;
+            error.style.display = "block";
+        }
+
+        document.getElementById("auth-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value;
+            var submitBtn = document.getElementById("auth-submit");
+
+            document.getElementById("auth-error").style.display = "none";
+            submitBtn.disabled = true;
+
+            try {
+                if (pendingChallengeToken) {
+                    var code = document.getElementById("mfa-code").value.trim();
+                    var mfaResult = await verifyMfaCode(pendingChallengeToken, code);
+
+                    if (!mfaResult.success) {
+                        showError(mfaResult.message || "Invalid code");
+                        return;
+                    }
+
+                    saveSession(mfaResult);
+                    window.location.href = "Index.html";
+                    return;
+                }
+
+                var result = await loginUser(email, password);
+
+                if (result.mfaRequired) {
+                    pendingChallengeToken = result.challengeToken;
+                    document.getElementById("mfa-group").style.display = "block";
+                    document.getElementById("auth-submit").textContent = "Verify code";
+                    return;
+                }
+
+                if (!result.success) {
+                    showError(result.message || "Login failed");
+                    return;
+                }
+
+                saveSession(result);
+                window.location.href = "Index.html";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
+
 </html>

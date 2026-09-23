@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../styles/Main.css">
+    <link rel="stylesheet" href="../styles/Register.css">
+</head>
+
+<body>
+    <div class="container">
+        <button id="dark-mode-toggle" type="button"></button>
+        <a href="Options.html" class="btn-text" data-i18n="options">Options</a>
+
+        <h1>Create account</h1>
+        <p class="subtitle">Register to play the quiz</p>
+
+        <form id="register-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password-confirmation">Confirm password</label>
+                <input type="password" id="password-confirmation" required>
+            </div>
+
+            <div class="error-inline" id="register-error" style="display:none;"></div>
+
+            <button type="submit" class="btn-main" id="register-submit">Create account</button>
+        </form>
+
+        <a href="login.html" class="btn-text" style="margin-top: 16px;">Already have an account? Log in</a>
+    </div>
+
+    <!-- Core -->
+    <script src="../js/session.js"></script>
+
+    <!-- API layer -->
+    <script src="../js/api/auth.js"></script>
+    <script src="../js/api/quiz.js"></script>
+    <script src="../js/api/leaderboard.js"></script>
+    <script src="../js/api/profile.js"></script>
+
+    <!-- UI helpers -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/setup.js"></script>
+    <script>
+        redirectIfLoggedIn();
+        setupSiteSettings();
+
+        function showError(message) {
+            var error = document.getElementById("register-error");
+            error.textContent = message;
+            error.style.display = "block";
+        }
+
+        document.getElementById("register-form").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            var name = document.getElementById("name").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value;
+            var passwordConfirmation = document.getElementById("password-confirmation").value;
+            var submitBtn = document.getElementById("register-submit");
+
+            document.getElementById("register-error").style.display = "none";
+
+            if (password !== passwordConfirmation) {
+                showError("Passwords do not match");
+                return;
+            }
+
+            submitBtn.disabled = true;
+
+            try {
+                var result = await registerUser(name, email, password, passwordConfirmation);
+
+                if (!result.success) {
+                    showError(result.message || "Registration failed");
+                    return;
+                }
+
+                saveSession(result);
+                window.location.href = "Index.html";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
