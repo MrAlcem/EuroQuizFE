@@ -30,7 +30,7 @@ function isAdmin() {
 
 function requireAdmin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/login.html";
+        window.location.href = "../screens/Login.html";
         return;
     }
     if (!isAdmin()) {
@@ -48,7 +48,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/login.html";
+        window.location.href = "../screens/Login.html";
     }
 }
 
