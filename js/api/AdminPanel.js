@@ -15,18 +15,24 @@ class Question {
         else if (this.category == "History") { categoryClass = "hist" }
         else if (this.category == "Culture") { categoryClass = "cult" }
 
-        const $row = $(`
-            <tr>
-                <td>${this.number}</td>
-                <td>${this.text}</td>
-                <td><span class="tag ${categoryClass}">${this.category}</span></td>
-                <td><span class="flag">${this.nation}</span></td>
-                <td class="actions">
-                    <i class="fa-regular fa-pen-to-square edit-btn" title="Edit"></i>
-                    <i class="fa-regular fa-trash-can delete-btn" title="Delete"></i>
-                </td>
-            </tr>
-        `);
+        const $row = $("<tr>");
+        $row.append($("<td>").text(this.number));
+        $row.append($("<td>").text(this.text));
+        $row.append(
+            $("<td>").append(
+                $("<span>").addClass("tag").addClass(categoryClass).text(this.category)
+            )
+        );
+        $row.append(
+            $("<td>").append(
+                $("<span>").addClass("flag").text(this.nation)
+            )
+        );
+        $row.append(
+            $("<td>").addClass("actions")
+                .append($("<i>").addClass("fa-regular fa-pen-to-square edit-btn").attr("title", "Edit"))
+                .append($("<i>").addClass("fa-regular fa-trash-can delete-btn").attr("title", "Delete"))
+        );
 
         $row.data("question", this);
         return $row;
