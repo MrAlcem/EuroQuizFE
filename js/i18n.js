@@ -20,7 +20,10 @@ var translations = {
         startQuizButton: "Start Quiz", loading: "Loading...", noScores: "No scores yet",
         failedLeaderboard: "Failed to load leaderboard", you: "(you)", noScoreYet: "No score yet",
         correct: "Correct!", wrong: "Wrong!", quizHistory: "Quiz History", bestScore: "Best score:",
-        failedProfile: "Failed to load profile", theme: "Theme color"
+        failedProfile: "Failed to load profile", theme: "Theme color", dailyQuiz: "Daily Challenge",
+        dailyQuizDescription: "One challenge per day · earn XP", category: "Any category",
+        cat1: "Geography", cat2: "Nature", cat3: "History", cat4: "Culture", country: "Any country",
+        ctry1: "Croatia", ctry2: "Netherlands", ctry3: "Sweden", time: "Time", historyDesc: "Click a quiz to review your answers."
     },
     hr: {
         darkMode: "Tamni način", lightMode: "Svijetli način",
@@ -39,7 +42,10 @@ var translations = {
         startQuizButton: "Pokreni kviz", loading: "Učitavanje...", noScores: "Još nema rezultata",
         failedLeaderboard: "Ljestvicu nije moguće učitati", you: "(vi)", noScoreYet: "Još nema rezultata",
         correct: "Točno!", wrong: "Netočno!", quizHistory: "Povjest Kvizova", bestScore: "Najbolji rezultat:",
-        failedProfile: "Profil nije moguće učitati", theme: "Boja teme"
+        failedProfile: "Profil nije moguće učitati", theme: "Boja teme", dailyQuiz: "Dnevni izazov",
+        dailyQuizDescription: "Jedan izazov dnevno · zaradi XP", category: "Bilo koja kategorija",
+        cat1: "Geografija", cat2: "Priroda", cat3: "Povijest", cat4: "Kultura", country: "Bilo koja zemlja",
+        ctry1: "Hrvatska", ctry2: "Nizozemska", ctry3: "Švedska", time: "Vrijeme", historyDesc: "Kliknite na kviz da pregledate svoje odgovore."
     },
     nl: {
         darkMode: "Donkere modus", lightMode: "Lichte modus",
@@ -58,7 +64,32 @@ var translations = {
         startQuizButton: "Start quiz", loading: "Laden...", noScores: "Nog geen scores",
         failedLeaderboard: "Ranglijst laden mislukt", you: "(jij)", noScoreYet: "Nog geen score",
         correct: "Goed!", wrong: "Fout!", quizHistory: "Quizgeschiedenis", bestScore: "Beste score:",
-        failedProfile: "Profiel laden mislukt"
+        failedProfile: "Profiel laden mislukt", theme: "Themakleur", dailyQuiz: "Dagelijkse uitdaging",
+        dailyQuizDescription: "Eén uitdaging per dag · verdien XP", category: "Elke categorie",
+        cat1: "Geografie", cat2: "Natuur", cat3: "Geschiedenis", cat4: "Cultuur", country: "Elk land",
+        ctry1: "Kroatië", ctry2: "Nederland", ctry3: "Zweden", time: "Tijd", historyDesc: "Klik op een quiz om je antwoorden te bekijken."
+    },
+    se: {
+        darkMode: "Mörkt läge", lightMode: "Ljust läge",
+        options: "Alternativ", language: "Språk", english: "Engelska", croatian: "Kroatiska", dutch: "Nederländska",
+        home: "Hem", logout: "Logga ut", signedInAs: "Inloggad som",
+        quizChallenge: "Quizutmaning", chooseWhat: "Välj vad du vill göra",
+        startQuiz: "Starta quiz", quizDescription: "10 frågor · 3 liv · flerval",
+        leaderboard: "Topplista", leaderboardDescription: "Se de bästa spelarna efter poäng",
+        myProfile: "Min profil", profileDescription: "Personlig poäng och quizhistorik",
+        question: "Fråga", submitAnswer: "Skicka svar", nextQuestion: "Nästa fråga",
+        seeResults: "Se resultat", quizFinished: "Quiz avslutat",
+        correctAnswers: "Rätta svar:", remainingLives: "Återstående liv:",
+        totalScore: "Totalpoäng:", playAgain: "Spela igen",
+        viewLeaderboard: "Visa topplista", backHome: "Tillbaka till startsidan",
+        topPlayers: "Toppspelare efter poäng", yourPosition: "Din placering",
+        startQuizButton: "Starta quiz", loading: "Laddar...", noScores: "Inga poäng ännu",
+        failedLeaderboard: "Kunde inte ladda topplistan", you: "(du)", noScoreYet: "Ingen poäng ännu",
+        correct: "Rätt!", wrong: "Fel!", quizHistory: "Quizhistorik", bestScore: "Bästa poäng:",
+        failedProfile: "Kunde inte ladda profilen", theme: "Temafärg", dailyQuiz: "Daglig utmaning",
+        dailyQuizDescription: "En utmaning per dag · tjäna XP", category: "Valfri kategori",
+        cat1: "Geografi", cat2: "Natur", cat3: "Historia", cat4: "Kultur", country: "Valfritt land",
+        ctry1: "Kroatien", ctry2: "Nederländerna", ctry3: "Sverige", time: "Tid", historyDesc: "Klicka på ett quiz för att granska dina svar."
     }
 };
 
@@ -72,7 +103,7 @@ function t(key) {
 }
 
 function setLanguage(language) {
-    if (language !== "en" && language !== "hr" && language !== "nl") language = "en";
+    if (language !== "en" && language !== "hr" && language !== "nl" && language !== "se") language = "en";
     localStorage.setItem("language", language);
     applyLanguage();
 }

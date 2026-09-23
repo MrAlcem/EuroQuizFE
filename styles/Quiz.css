@@ -15,18 +15,19 @@ body::after {
     position: fixed;
     inset: 0;
     z-index: -1;
-.quiz-level {
-    margin: -12px 0 18px;
-    color: #64748b;
-    font-weight: 600;
-}
 
-.question {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 22px;
-    line-height: 1.4;
-}
+    .quiz-level {
+        margin: -12px 0 18px;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .question {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 22px;
+        line-height: 1.4;
+    }
 
     background-repeat: no-repeat;
     background-size: cover;
@@ -40,7 +41,7 @@ body::after {
 
 /* Light mode */
 body::before {
-    background-image: url("../res/Drava.JPG");
+    background-image: url("../res/images/Drava.JPG");
     opacity: 1;
 }
 
@@ -49,7 +50,7 @@ body::after {
     background-image:
         linear-gradient(rgba(0, 0, 0, 0.25),
             rgba(0, 0, 0, 0.25)),
-        url("../res/Rembrandt.jpg");
+        url("../res/images/Rembrandt.jpg");
 }
 
 /* Crossfade */

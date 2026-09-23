@@ -6,5 +6,6 @@ function setupSiteSettings() {
     applyDarkMode();
     applyLanguage();
     setupDarkMode();
+    setupTheme();
     setupLanguage();
 }

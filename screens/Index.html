@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Euro Quiz - User Panel</title>
     <link rel="stylesheet" href="../styles/Main.css">
     <link rel="stylesheet" href="../styles/Index.css">
 </head>
@@ -43,11 +43,11 @@
         </div>
 
         <div class="menu-actions">
-            <a href="../screens/Quiz.html" id="start-quiz-link" class="menu-card">
+            <a href="../screens/Quiz.html" id="start-quiz-link" class="menu-card themed">
                 <span class="menu-title" data-i18n="startQuiz">Start Quiz</span>
                 <span class="menu-desc" data-i18n="quizDescription">10 questions · 3 lives</span>
             </a>
-            <a href="../screens/Quiz.html?daily=1" class="menu-card">
+            <a href="../screens/Quiz.html?daily=1" class="menu-card themed">
                 <span class="menu-title">Daily Challenge</span>
                 <span class="menu-desc">One challenge per day · earn XP</span>
             </a>
@@ -77,6 +77,7 @@
     <!-- UI helpers -->
     <script src="../js/i18n.js"></script>
     <script src="../js/dark-mode.js"></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/setup.js"></script>
     <script>
         requireLogin();

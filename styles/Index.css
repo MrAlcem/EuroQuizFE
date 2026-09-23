@@ -33,7 +33,6 @@ body.dark-mode .quiz-filters select {
 
 .menu-card {
     width: 100%;
-    background: #3b82f6;
     color: white;
     border: none;
     padding: 20px;
@@ -44,10 +43,6 @@ body.dark-mode .quiz-filters select {
     text-decoration: none;
     display: block;
     text-align: center;
-}
-
-.menu-card:hover {
-    background: #2563eb;
 }
 
 .menu-card.secondary {
