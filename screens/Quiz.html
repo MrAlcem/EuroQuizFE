@@ -73,7 +73,10 @@
     var timerId = null;
     var timeRemaining = 30;
     var pendingResult = null;
-    var isDaily = new URLSearchParams(window.location.search).get("daily") === "1";
+    var quizParams = new URLSearchParams(window.location.search);
+    var isDaily = quizParams.get("daily") === "1";
+    var quizCategory = quizParams.get("category") || null;
+    var quizCountry = quizParams.get("country") || null;
 
     function hearts(n) {
       var html = "";
@@ -99,7 +102,7 @@
       document.getElementById("quiz-error").style.display = "none";
 
       try {
-        var session = await fetchQuizSession(isDaily);
+        var session = await fetchQuizSession(isDaily, quizCategory, quizCountry);
         questions = session.data;
         sessionId = session.session_id;
         timeRemaining = session.timer_seconds;
@@ -110,7 +113,7 @@
         document.getElementById("options").innerHTML = "";
         document.getElementById("submit-btn").style.display = "none";
         var error = document.getElementById("quiz-error");
-        error.textContent = "Failed to load questions";
+        error.textContent = err.message || "Failed to load questions";
         error.style.display = "block";
         return;
       }
@@ -143,7 +146,7 @@
       document.getElementById("submit-btn").disabled = true;
       document.getElementById("next-btn").style.display = "none";
       selectedOption = null;
-      startTimer();
+      startTimer(q.time_limit_seconds || timeRemaining);
     }
 
     function selectOption(element, key) {
@@ -155,21 +158,19 @@
       document.getElementById("submit-btn").disabled = false;
     }
 
-    document.getElementById("submit-btn").onclick = async function () {
-      if (!selectedOption) return;
-
+    async function submitAnswer(chosenOption) {
       document.getElementById("submit-btn").style.display = "none";
       stopTimer();
 
       try {
-        var answer = await answerQuizQuestion(sessionId, selectedOption);
+        var answer = await answerQuizQuestion(sessionId, chosenOption);
 
         document.querySelectorAll(".option").forEach(function (option) {
           option.onclick = null;
           if (option.dataset.option === answer.correct_option) {
             option.classList.add("correct");
           }
-          if (option.dataset.option === selectedOption && !answer.correct) {
+          if (option.dataset.option === chosenOption && !answer.correct) {
             option.classList.add("wrong");
           }
         });
@@ -185,6 +186,11 @@
         submitError.style.display = "block";
         document.getElementById("submit-btn").style.display = "block";
       }
+    }
+
+    document.getElementById("submit-btn").onclick = function () {
+      if (!selectedOption) return;
+      submitAnswer(selectedOption);
     };
 
     document.getElementById("next-btn").onclick = async function () {
@@ -197,17 +203,18 @@
       showQuestion();
     };
 
-    function startTimer() {
+    function startTimer(seconds) {
       stopTimer();
-      timeRemaining = 30;
+      timeRemaining = seconds;
       document.getElementById("question-timer").textContent = timeRemaining;
       timerId = setInterval(function () {
         timeRemaining--;
         document.getElementById("question-timer").textContent = Math.max(timeRemaining, 0);
         if (timeRemaining <= 0) {
           stopTimer();
-          selectedOption = "A";
-          document.getElementById("submit-btn").click();
+          // No answer chosen in time; the server independently re-checks
+          // the timeout too, so this is just an honest "no answer" signal.
+          submitAnswer(null);
         }
       }, 1000);
     }

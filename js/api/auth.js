@@ -38,7 +38,7 @@ async function loginUser(email, password) {
         userId: String(data.user.id),
         username: data.user.name,
         email: data.user.email,
-        role: "ROLE_User"
+        role: data.user.role
     };
 }
 
@@ -67,7 +67,7 @@ async function verifyMfaCode(challengeToken, code) {
         userId: String(data.user.id),
         username: data.user.name,
         email: data.user.email,
-        role: "ROLE_User"
+        role: data.user.role
     };
 }
 
@@ -111,6 +111,6 @@ async function registerUser(name, email, password, passwordConfirmation) {
         userId: String(data.user.id),
         username: data.user.name,
         email: data.user.email,
-        role: "ROLE_User"
+        role: data.user.role
     };
 }

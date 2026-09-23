@@ -50,15 +50,19 @@
     requireLogin();
     document.getElementById("logout-btn").addEventListener("click", logout);
 
+    function levelBadge(level) {
+      return level ? ' <span class="level-badge level-' + level.toLowerCase() + '">' + level + '</span>' : "";
+    }
+
     async function loadLeaderboard() {
       var list = document.getElementById("leaderboard-list");
       var youPanel = document.getElementById("you-panel");
       var youRow = document.getElementById("you-row");
-      var currentUser = getCurrentUser();
 
       try {
-        var players = await getLeaderboard();
-        players.sort(function (a, b) { return b.score - a.score; });
+        var response = await getLeaderboard();
+        var players = response.data || [];
+        var you = response.you;
         list.innerHTML = "";
 
         if (players.length === 0) {
@@ -67,40 +71,27 @@
           return;
         }
 
-        var myRank = null;
-        var myPlayer = null;
-
-        players.forEach(function (player, index) {
-          var rank = index + 1;
-          var isMe = player.name === currentUser;
-
-          if (isMe) {
-            myRank = rank;
-            myPlayer = player;
-          }
+        players.forEach(function (player) {
+          var isMe = you && player.rank === you.rank && player.name === you.name;
 
           var div = document.createElement("div");
           div.className = isMe ? "player current-user in-list" : "player";
           div.innerHTML =
-            '<div class="rank">#' + rank + "</div>" +
-            '<div class="name">' + player.name + (isMe ? " " + t("you") : "") + "</div>" +
+            '<div class="rank">#' + player.rank + "</div>" +
+            '<div class="name">' + player.name + (isMe ? " " + t("you") : "") + levelBadge(player.level) + "</div>" +
             '<div class="score">' + player.score + "</div>";
           list.appendChild(div);
         });
 
-        if (myPlayer) {
+        if (you) {
           youRow.innerHTML =
-            '<div class="rank">#' + myRank + "</div>" +
-            '<div class="name">' + myPlayer.name + " " + t("you") + "</div>" +
-            '<div class="score">' + myPlayer.score + "</div>";
+            '<div class="rank">#' + you.rank + "</div>" +
+            '<div class="name">' + you.name + " " + t("you") + levelBadge(you.level) + "</div>" +
+            '<div class="score">' + you.score + "</div>";
+          youPanel.style.display = "block";
         } else {
-          youRow.innerHTML =
-            '<div class="rank">—</div>' +
-            '<div class="name">' + currentUser + " " + t("you") + "</div>" +
-            '<div class="score">' + t("noScoreYet") + "</div>";
+          youPanel.style.display = "none";
         }
-
-        youPanel.style.display = "block";
       } catch (err) {
         list.innerHTML = '<div class="error-inline">' + t("failedLeaderboard") + '</div>';
         youPanel.style.display = "none";
