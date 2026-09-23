@@ -18,11 +18,34 @@
 
     <h1 data-i18n="options">Options</h1>
 
+    <button id="dark-mode-toggle" type="button"></button>
+
+    <div class="theme-container">
+      <label class="settings-label" data-i18n="theme">Theme Color</label>
+
+      <div>
+        <input type="radio" id="blue" name="theme-select" value="blue" checked />
+        <label for="blue">Blue</label>
+      </div>
+
+      <div>
+        <input type="radio" id="red" name="theme-select" value="red" />
+        <label for="red">Red</label>
+      </div>
+
+      <div>
+        <input type="radio" id="violet" name="theme-select" value="violet" />
+        <label for="violet">Violet</label>
+      </div>
+    </div>
+
     <div class="settings-group">
       <label class="settings-label" for="language-select" data-i18n="language">Language</label>
       <select id="language-select">
         <option value="en" data-i18n="english">English</option>
         <option value="hr" data-i18n="croatian">Croatian</option>
+        <option value="du" data-i18n="dutch">Dutch</option>
+        <option value="sw" data-i18n="swedish">Swedish</option>
       </select>
     </div>
 
@@ -43,7 +66,7 @@
       <p id="mfa-message" class="mfa-message" role="status" aria-live="polite"></p>
     </div>
 
-    <button id="dark-mode-toggle" type="button"></button>
+
   </div>
 
   <!-- Core -->

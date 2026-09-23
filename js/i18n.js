@@ -20,7 +20,7 @@ var translations = {
         startQuizButton: "Start Quiz", loading: "Loading...", noScores: "No scores yet",
         failedLeaderboard: "Failed to load leaderboard", you: "(you)", noScoreYet: "No score yet",
         correct: "Correct!", wrong: "Wrong!", quizHistory: "Quiz History", bestScore: "Best score:",
-        failedProfile: "Failed to load profile"
+        failedProfile: "Failed to load profile", theme: "Theme color"
     },
     hr: {
         darkMode: "Tamni način", lightMode: "Svijetli način",
@@ -39,7 +39,7 @@ var translations = {
         startQuizButton: "Pokreni kviz", loading: "Učitavanje...", noScores: "Još nema rezultata",
         failedLeaderboard: "Ljestvicu nije moguće učitati", you: "(vi)", noScoreYet: "Još nema rezultata",
         correct: "Točno!", wrong: "Netočno!", quizHistory: "Povjest Kvizova", bestScore: "Najbolji rezultat:",
-        failedProfile: "Profil nije moguće učitati"
+        failedProfile: "Profil nije moguće učitati", theme: "Boja teme"
     }
 };
 
