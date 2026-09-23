@@ -34,7 +34,7 @@ function requireAdmin() {
         return;
     }
     if (!isAdmin()) {
-        window.location.href = "../screens/Index.html";
+        window.location.href = "../screens/home.html";
     }
 }
 
@@ -54,7 +54,7 @@ function requireLogin() {
 
 function redirectIfLoggedIn() {
     if (isLoggedIn()) {
-        window.location.href = "../screens/Index.html";
+        window.location.href = "../screens/home.html";
     }
 }
 
@@ -73,7 +73,7 @@ function logout() {
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
-    window.location.href = "../screens/Login.html";
+    window.location.href = "../screens/home.html";
 }
 
 // Helper: fetch with JWT attached

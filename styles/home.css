@@ -624,6 +624,113 @@ a:hover {
     margin-top: 6px;
 }
 
+/* ===== APP VIEW (signed-in dashboard) ===== */
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(23, 27, 33, 0.75);
+}
+
+.navbar-user .btn-primary {
+    background: transparent;
+    color: #171B21;
+    border: 1px solid rgba(23, 27, 33, 0.15);
+}
+
+.app-view {
+    padding: 56px 32px 84px;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.app-hero {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.app-hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #171B21;
+    margin-bottom: 8px;
+}
+
+.app-hero p {
+    font-size: 15px;
+    color: rgba(23, 27, 33, 0.6);
+}
+
+.app-filters {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.app-filters select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(23, 27, 33, 0.15);
+    font: inherit;
+    font-size: 14px;
+    background: #ffffff;
+    color: #171B21;
+}
+
+.app-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.app-card {
+    text-decoration: none;
+    background: #F6F7FB;
+    border-radius: 16px;
+    padding: 22px;
+    display: block;
+}
+
+.app-card strong {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #171B21;
+    margin-bottom: 4px;
+}
+
+.app-card small {
+    font-size: 13px;
+    color: rgba(23, 27, 33, 0.55);
+}
+
+.app-card.primary {
+    background: #171B21;
+}
+
+.app-card.primary strong {
+    color: #ffffff;
+}
+
+.app-card.primary small {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 640px) {
+    .app-menu {
+        grid-template-columns: 1fr;
+    }
+
+    .app-filters {
+        flex-direction: column;
+    }
+}
+
 /* ===== FOOTER ===== */
 .site-footer {
     border-top: 1px solid rgba(23, 27, 33, 0.08);
