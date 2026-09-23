@@ -4,32 +4,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz App - Profile</title>
+  <title>Profile</title>
   <link rel="stylesheet" href="../styles/Main.css">
   <link rel="stylesheet" href="../styles/Profile.css">
 </head>
 
 <body>
   <div class="container">
-    <button id="dark-mode-toggle" type="button">🌙 Dark Mode</button>
+    <button id="dark-mode-toggle" type="button"></button>
     <div class="top-bar">
-      <a href="Index.html" class="btn-text">Home</a>
-      <button type="button" class="btn-text" id="logout-btn">Logout</button>
+      <a href="Index.html" class="btn-text" data-i18n="home">Home</a>
+      <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
     </div>
 
-    <h1>My Profile</h1>
-    <p class="subtitle" id="profile-subtitle">Loading...</p>
+    <h1 data-i18n="myProfile">My Profile</h1>
+    <p class="subtitle" id="profile-subtitle" data-i18n="loading">Loading...</p>
 
-    <div class="stat">Best score: <strong id="best-score">-</strong></div>
+    <div class="stat" data-i18n="bestScore">Best score: <strong id="best-score">-</strong></div>
     <div class="stat">Email: <strong id="profile-email">-</strong></div>
 
-    <h2 class="history-title">Quiz history</h2>
+    <h2 class="history-title" data-i18n="quizHistory">Quiz history</h2>
     <div id="history-list">
       <div class="loading">Loading...</div>
     </div>
 
-    <a href="Quiz.html" class="btn-main" style="margin-top: 20px;">Start Quiz</a>
-    <a href="Leaderboard.html" class="btn-secondary">Leaderboard</a>
+    <a href="Quiz.html" class="btn-main" style="margin-top: 20px;" data-i18n="startQuizButton">Start Quiz</a>
+    <a href="Leaderboard.html" class="btn-secondary" data-i18n="leaderboard">Leaderboard</a>
   </div>
 
   <!-- Core -->
@@ -82,7 +82,7 @@
     }
 
     loadProfile();
-    setupDarkMode();
+    setupSiteSettings();
   </script>
 </body>
 

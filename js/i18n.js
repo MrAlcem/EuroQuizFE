@@ -4,7 +4,7 @@
 
 var translations = {
     en: {
-        darkMode: "🌙 Dark Mode", lightMode: "☀️ Light Mode",
+        darkMode: "Dark Mode", lightMode: "Light Mode",
         options: "Options", language: "Language", english: "English", croatian: "Croatian",
         home: "Home", logout: "Logout", signedInAs: "Signed in as",
         quizChallenge: "Quiz Challenge", chooseWhat: "Choose what you want to do",
@@ -19,10 +19,11 @@ var translations = {
         topPlayers: "Top players by score", yourPosition: "Your position",
         startQuizButton: "Start Quiz", loading: "Loading...", noScores: "No scores yet",
         failedLeaderboard: "Failed to load leaderboard", you: "(you)", noScoreYet: "No score yet",
-        correct: "Correct!", wrong: "Wrong!"
+        correct: "Correct!", wrong: "Wrong!", quizHistory: "Quiz History", bestScore: "Best score:",
+        failedProfile: "Failed to load profile"
     },
     hr: {
-        darkMode: "🌙 Tamni način", lightMode: "☀️ Svijetli način",
+        darkMode: "Tamni način", lightMode: "Svijetli način",
         options: "Postavke", language: "Jezik", english: "Engleski", croatian: "Hrvatski",
         home: "Početna", logout: "Odjava", signedInAs: "Prijavljen kao",
         quizChallenge: "Kviz izazov", chooseWhat: "Odaberite što želite raditi",
@@ -37,7 +38,8 @@ var translations = {
         topPlayers: "Najbolji igrači prema rezultatu", yourPosition: "Vaša pozicija",
         startQuizButton: "Pokreni kviz", loading: "Učitavanje...", noScores: "Još nema rezultata",
         failedLeaderboard: "Ljestvicu nije moguće učitati", you: "(vi)", noScoreYet: "Još nema rezultata",
-        correct: "Točno!", wrong: "Netočno!"
+        correct: "Točno!", wrong: "Netočno!", quizHistory: "Povjest Kvizova", bestScore: "Najbolji rezultat:",
+        failedProfile: "Profil nije moguće učitati"
     }
 };
 

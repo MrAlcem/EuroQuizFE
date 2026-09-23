@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz App - Quiz</title>
+  <title>Quiz</title>
   <link rel="stylesheet" href="../styles/Main.css">
   <link rel="stylesheet" href="../styles/Quiz.css">
 </head>
@@ -25,7 +25,7 @@
       </div>
       <p id="quiz-level" class="quiz-level"></p>
 
-      <div class="question" id="question-text">Loading...</div>
+      <div class="question" id="question-text" data-i18n="loading">Loading...</div>
       <div id="options"></div>
       <div class="error-inline" id="quiz-error" style="display:none;"></div>
 
@@ -47,6 +47,7 @@
       <a href="Index.html" class="btn-secondary" data-i18n="backHome">Back to Home</a>
     </div>
   </div>
+
 
   <!-- Core -->
   <script src="../js/session.js"></script>
@@ -120,6 +121,7 @@
 
     function showQuestion() {
       var q = questions[currentIndex];
+      console.log(currentIndex);
       document.getElementById("question-text").textContent = q.text;
       document.getElementById("current").textContent = currentIndex + 1;
 
