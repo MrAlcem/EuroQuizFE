@@ -48,18 +48,15 @@
         <!-- Header -->
         <div class="header">
             <div class="header-left">
-                <h1>
-                    Admin Panel
-                    <span class="badge">BACKEND FEEDBACK ACTIVE</span>
-                </h1>
-                <p>Manage quiz questions, user database, and system logs.</p>
+                <h1>Admin Panel</h1>
+                <p>Manage quiz questions and view the user database.</p>
             </div>
             <div class="header-right">
-                <i class="fas fa-bell"></i>
                 <div class="user-info">
                     <div class="avatar"></div>
-                    <span>(USER) ROLE / POSITION</span>
+                    <span id="admin-name">...</span>
                 </div>
+                <button type="button" class="btn" style="width:auto;margin-top:0;" id="admin-logout-btn">Logout</button>
             </div>
         </div>
 
@@ -68,29 +65,29 @@
             <div class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-book"></i></div>
                 <div class="stat-info">
-                    <h3>X AMOUNT</h3>
+                    <h3 id="stat-total-questions">-</h3>
                     <p>TOTAL QUESTIONS</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon purple"><i class="fas fa-users"></i></div>
                 <div class="stat-info">
-                    <h3>X AMOUNT</h3>
+                    <h3 id="stat-total-users">-</h3>
                     <p>REGISTERED USERS</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon green"><i class="fas fa-chart-line"></i></div>
                 <div class="stat-info">
-                    <h3>X AMOUNT</h3>
+                    <h3 id="stat-total-results">-</h3>
                     <p>QUIZ RESULTS LOGGED</p>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon pink"><i class="fas fa-heart"></i></div>
+                <div class="stat-icon pink"><i class="fas fa-tags"></i></div>
                 <div class="stat-info">
-                    <h3>X AMOUNT</h3>
-                    <p></p>
+                    <h3 id="stat-total-categories">-</h3>
+                    <p>CATEGORIES</p>
                 </div>
             </div>
         </div>
@@ -112,12 +109,13 @@
                                 <th>ID</th>
                                 <th>Question Text Preview</th>
                                 <th>Category</th>
-                                <th>Country Context</th>
+                                <th>Country</th>
+                                <th>Difficulty</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- New rows will be appended here by JavaScript -->
+                        <tbody id="questions-table-body">
+                            <!-- Rows rendered by JavaScript from GET /admin/questions -->
                         </tbody>
                     </table>
                 </div>
@@ -126,7 +124,6 @@
                 <div class="card">
                     <div class="card-header">
                         <h2>User Overview</h2>
-                        <a href="#">View all users</a>
                     </div>
                     <table>
                         <thead>
@@ -134,32 +131,13 @@
                                 <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
+                                <th>Level</th>
                                 <th>Total Score</th>
-                                <th>Date Joined</th>
+                                <th>Joined</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#001</td>
-                                <td>quizmaster</td>
-                                <td>quiz@domain.com</td>
-                                <td>1,520 pts</td>
-                                <td>2025-09-13</td>
-                            </tr>
-                            <tr>
-                                <td>#002</td>
-                                <td>croatiafan</td>
-                                <td>croatia@domain.com</td>
-                                <td>980 pts</td>
-                                <td>2025-09-09</td>
-                            </tr>
-                            <tr>
-                                <td>#003</td>
-                                <td>nl_jensen</td>
-                                <td>jensen@domain.com</td>
-                                <td>875 pts</td>
-                                <td>2025-09-08</td>
-                            </tr>
+                        <tbody id="users-table-body">
+                            <!-- Rows rendered by JavaScript from GET /admin/users -->
                         </tbody>
                     </table>
                 </div>
@@ -167,34 +145,32 @@
 
             <!-- RIGHT COLUMN -->
             <div>
-                <!-- Add New Question -->
+                <!-- Add / Edit Question -->
                 <div class="card">
                     <div class="card-header">
-                        <h2>Add New Question</h2>
+                        <h2 id="question-form-title">Add New Question</h2>
                     </div>
-                    <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
-                        Create and append a new validation schema record to the live quiz collection.
-                    </p>
+
+                    <input type="hidden" id="edit-question-id" value="">
 
                     <div class="form-group">
                         <label>Question text</label>
-                        <input type="text" placeholder="e.g. What is the national flower of Sweden?" id="question-text">
+                        <input type="text" placeholder="e.g. What is the capital of the Netherlands?" id="question-text">
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Country</label>
                             <select id="question-nation">
-                                <option>Sweden</option>
-                                <option>Croatia</option>
-                                <option>Netherlands</option>
+                                <option value="NL">Netherlands</option>
+                                <option value="HR">Croatia</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Category</label>
                             <select id="question-category">
-                                <option>Nature</option>
                                 <option>Geography</option>
+                                <option>Nature</option>
                                 <option>History</option>
                                 <option>Culture</option>
                             </select>
@@ -203,77 +179,89 @@
 
                     <div class="form-row">
                         <div class="form-group">
+                            <label>Difficulty</label>
+                            <select id="question-difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Time limit (seconds)</label>
+                            <input type="number" id="question-time-limit" min="5" max="120" placeholder="15">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
                             <label>Option A</label>
-                            <input type="text" placeholder="Linnea (Twinflower)" id="opt-a">
+                            <input type="text" id="opt-a">
                         </div>
                         <div class="form-group">
                             <label>Option B</label>
-                            <input type="text" placeholder="Tulip" id="opt-b">
+                            <input type="text" id="opt-b">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label>Option C</label>
-                            <input type="text" placeholder="Rose" id="opt-c">
+                            <input type="text" id="opt-c">
                         </div>
                         <div class="form-group">
                             <label>Option D</label>
-                            <input type="text" placeholder="Lily of the valley" id="opt-d">
+                            <input type="text" id="opt-d">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Correct Option Reference</label>
+                        <label>Correct Option</label>
                         <div class="correct-options">
                             <label>
-                                <input type="checkbox" id="ans-a">
+                                <input type="radio" name="correct-option" id="ans-a" value="A">
                                 Option A
                             </label>
                             <label>
-                                <input type="checkbox" id="ans-b">
+                                <input type="radio" name="correct-option" id="ans-b" value="B">
                                 Option B
                             </label>
                             <label>
-                                <input type="checkbox" id="ans-c">
+                                <input type="radio" name="correct-option" id="ans-c" value="C">
                                 Option C
                             </label>
                             <label>
-                                <input type="checkbox" id="ans-d">
+                                <input type="radio" name="correct-option" id="ans-d" value="D">
                                 Option D
                             </label>
                         </div>
                     </div>
 
+                    <p class="error-inline" id="question-form-error" style="display:none;color:#dc2626;font-size:13px;margin-bottom:8px;"></p>
 
-                    <button class="btn">Add Question Entry</button>
+                    <button class="btn" id="submit-question-btn">Add Question Entry</button>
+                    <button class="btn" id="cancel-edit-btn" style="display:none;background:#e2e8f0;color:#334155;">Cancel edit</button>
                 </div>
 
                 <!-- Question Distribution -->
                 <div class="card">
                     <div class="card-header">
                         <h2>Question Distribution</h2>
-                        <a href="#">Filter Schema</a>
                     </div>
                     <div class="chart-box">
-                        <div class="donut">
+                        <div class="donut" id="distribution-donut">
                             <div class="donut-text">
-                                142<br>
+                                <span id="distribution-total">-</span><br>
                                 <small>QUESTIONS</small>
                             </div>
                         </div>
                         <div class="legend">
                             <div class="legend-item">
                                 <span class="dot blue"></span>
-                                Croatia (HR) <span style="margin-left:auto;">48 Qs</span>
+                                Croatia (HR) <span style="margin-left:auto;" id="distribution-hr">-</span>
                             </div>
                             <div class="legend-item">
                                 <span class="dot green"></span>
-                                Netherlands (NL) <span style="margin-left:auto;">47 Qs</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="dot orange"></span>
-                                Sweden (SE) <span style="margin-left:auto;">47 Qs</span>
+                                Netherlands (NL) <span style="margin-left:auto;" id="distribution-nl">-</span>
                             </div>
                         </div>
                     </div>
@@ -283,7 +271,13 @@
     </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/session.js"></script>
     <script src="../js/api/AdminPanel.js"></script>
+    <script>
+        requireAdmin();
+        document.getElementById("admin-name").textContent = getCurrentUser();
+        document.getElementById("admin-logout-btn").addEventListener("click", logout);
+    </script>
 
 </body>
 

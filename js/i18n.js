@@ -5,7 +5,7 @@
 var translations = {
     en: {
         darkMode: "Dark Mode", lightMode: "Light Mode",
-        options: "Options", language: "Language", english: "English", croatian: "Croatian",
+        options: "Options", language: "Language", english: "English", croatian: "Croatian", dutch: "Dutch",
         home: "Home", logout: "Logout", signedInAs: "Signed in as",
         quizChallenge: "Quiz Challenge", chooseWhat: "Choose what you want to do",
         startQuiz: "Start Quiz", quizDescription: "10 questions · 3 lives · multi-select",
@@ -24,7 +24,7 @@ var translations = {
     },
     hr: {
         darkMode: "Tamni način", lightMode: "Svijetli način",
-        options: "Postavke", language: "Jezik", english: "Engleski", croatian: "Hrvatski",
+        options: "Postavke", language: "Jezik", english: "Engleski", croatian: "Hrvatski", dutch: "Nizozemski",
         home: "Početna", logout: "Odjava", signedInAs: "Prijavljen kao",
         quizChallenge: "Kviz izazov", chooseWhat: "Odaberite što želite raditi",
         startQuiz: "Pokreni kviz", quizDescription: "10 pitanja · 3 života · višestruki odabir",
@@ -40,6 +40,25 @@ var translations = {
         failedLeaderboard: "Ljestvicu nije moguće učitati", you: "(vi)", noScoreYet: "Još nema rezultata",
         correct: "Točno!", wrong: "Netočno!", quizHistory: "Povjest Kvizova", bestScore: "Najbolji rezultat:",
         failedProfile: "Profil nije moguće učitati"
+    },
+    nl: {
+        darkMode: "Donkere modus", lightMode: "Lichte modus",
+        options: "Opties", language: "Taal", english: "Engels", croatian: "Kroatisch", dutch: "Nederlands",
+        home: "Home", logout: "Uitloggen", signedInAs: "Ingelogd als",
+        quizChallenge: "Quiz uitdaging", chooseWhat: "Kies wat je wilt doen",
+        startQuiz: "Start quiz", quizDescription: "10 vragen · 3 levens · meerkeuze",
+        leaderboard: "Ranglijst", leaderboardDescription: "Bekijk de topspelers op score",
+        myProfile: "Mijn profiel", profileDescription: "Persoonlijke score en quizgeschiedenis",
+        question: "Vraag", submitAnswer: "Antwoord versturen", nextQuestion: "Volgende vraag",
+        seeResults: "Bekijk resultaten", quizFinished: "Quiz afgerond",
+        correctAnswers: "Goede antwoorden:", remainingLives: "Resterende levens:",
+        totalScore: "Totale score:", playAgain: "Opnieuw spelen",
+        viewLeaderboard: "Bekijk ranglijst", backHome: "Terug naar home",
+        topPlayers: "Topspelers op score", yourPosition: "Jouw positie",
+        startQuizButton: "Start quiz", loading: "Laden...", noScores: "Nog geen scores",
+        failedLeaderboard: "Ranglijst laden mislukt", you: "(jij)", noScoreYet: "Nog geen score",
+        correct: "Goed!", wrong: "Fout!", quizHistory: "Quizgeschiedenis", bestScore: "Beste score:",
+        failedProfile: "Profiel laden mislukt"
     }
 };
 
@@ -53,7 +72,7 @@ function t(key) {
 }
 
 function setLanguage(language) {
-    if (language !== "en" && language !== "hr") language = "en";
+    if (language !== "en" && language !== "hr" && language !== "nl") language = "en";
     localStorage.setItem("language", language);
     applyLanguage();
 }
