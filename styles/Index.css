@@ -4,6 +4,33 @@
     gap: 12px;
 }
 
+.quiz-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.quiz-filters label {
+    display: none;
+}
+
+.quiz-filters select {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #1e293b;
+    font: inherit;
+    font-size: 14px;
+}
+
+body.dark-mode .quiz-filters select {
+    background: #334155;
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
 .menu-card {
     width: 100%;
     background: #3b82f6;
