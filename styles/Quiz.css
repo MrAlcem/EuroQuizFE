@@ -1,102 +1,82 @@
-.header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 22px;
-    font-size: 16px;
-    color: #64748b;
+/* =========================
+   Background crossfade
+   ========================= */
+
+body {
+    position: relative;
+    isolation: isolate;
+    background: #f8fafc;
 }
 
-.header strong {
-    color: #1e293b;
+/* Both backgrounds occupy the same layer */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    pointer-events: none;
+
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
 }
 
-.question {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 22px;
-    line-height: 1.4;
-}
-
-.option {
-    background: #e2e8f0;
-    color: #1e293b;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    user-select: none;
-}
-
-.option:hover {
-    background: #cbd5e1;
-}
-
-.option.selected {
-    border-color: #3b82f6;
-    background: #1d4ed8;
-    color: white;
-}
-
-.option.correct {
-    background: #166534;
-    border-color: #22c55e;
-    color: white;
-}
-
-.option.wrong {
-    background: #991b1b;
-    border-color: #ef4444;
-    color: white;
-}
-
-.feedback {
-    margin: 18px 0;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-    display: none;
-}
-
-.feedback.correct {
-    background: #14532d;
-    color: #86efac;
-    display: block;
-}
-
-.feedback.wrong {
-    background: #7f1d1d;
-    color: #fca5a5;
-    display: block;
-}
-
-#result-screen {
-    display: none;
-    text-align: center;
-}
-
-.stat {
-    font-size: 17px;
-    margin: 10px 0;
-    color: #475569;
-}
-
-.stat strong {
-    color: #1e293b;
-}
-
-.lives-row {
-    display: flex;
-    gap: 4px;
-}
-
-.life-heart {
-    width: 22px;
-    height: 22px;
+/* Light mode */
+body::before {
+    background-image: url("../res/Drava.JPG");
+    opacity: 1;
 }
 
 /* Dark mode */
+body::after {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.25),
+            rgba(0, 0, 0, 0.25)),
+        url("../res/Rembrandt.jpg");
+}
+
+/* Crossfade */
+body.dark-mode::before {
+    opacity: 0;
+}
+
+body.dark-mode::after {
+    opacity: 1;
+}
+
+
+/* =========================
+   Content transitions
+   ========================= */
+
+.container,
+.header,
+.option,
+.stat {
+    transition:
+        background-color 0.6s ease-in-out,
+        color 0.6s ease-in-out,
+        border-color 0.6s ease-in-out;
+}
+
+
+/* =========================
+   Existing colors
+   ========================= */
+
+.container {
+    background: #ffffff;
+}
+
+body.dark-mode .container {
+    background: #0f172a;
+}
+
 body.dark-mode .header {
     color: #94a3b8;
 }

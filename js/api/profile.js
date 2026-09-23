@@ -3,18 +3,17 @@
 // ==============================
 
 async function getUserProfile(userId) {
-    // ← put the real connection to MyDatabase here
-    // const res = await authFetch("/users/" + userId);
-    // return await res.json();
+    try {
+        const res = await authFetch(`/users/${userId}`);   // your authenticated fetch wrapper
 
-    return {
-        username: getCurrentUser(),
-        email: getCurrentEmail() || "unknown@email.com",
-        bestScore: 70,
-        history: [
-            { score: 70, date: "2026-09-18" },
-            { score: 50, date: "2026-09-17" },
-            { score: 30, date: "2026-09-16" }
-        ]
-    };
+        if (!res.ok) {
+            throw new Error(`Failed to load profile: ${res.status}`);
+        }
+
+        return await res.json();   // → { username, email, bestScore, history: [...] }
+    } catch (err) {
+        console.error("getUserProfile error:", err);
+        // fallback or re-throw depending on your UX needs
+        throw err;
+    }
 }
