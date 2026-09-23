@@ -9,6 +9,21 @@
 </head>
 
 <body>
+    <h1>Quiz</h1>
+
+    <p id="quiz-error" class="error" hidden></p>
+
+    <div id="question-card" hidden>
+        <p id="quiz-progress"></p>
+        <h2 id="question-text"></h2>
+        <div id="question-options"></div>
+        <button id="next-btn" type="button">Next question</button>
+    </div>
+
+    <div id="quiz-result" hidden></div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/quiz.js"></script>
     <div class="container">
         <button id="dark-mode-toggle" type="button"></button>
 
