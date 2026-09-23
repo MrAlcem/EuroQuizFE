@@ -26,6 +26,23 @@
       </select>
     </div>
 
+    <div class="settings-group mfa-settings">
+      <span class="settings-label">Two-factor authentication</span>
+      <p class="settings-help">Add an extra security step to your login.</p>
+      <button type="button" class="btn-main" id="mfa-setup-btn">Enable MFA</button>
+      <div id="mfa-setup-panel" class="mfa-setup-panel" hidden>
+        <p>Scan this QR code with an authenticator app.</p>
+        <div id="mfa-qr-code" class="mfa-qr-code"></div>
+        <p class="settings-help">Manual secret:</p>
+        <code id="mfa-secret" class="mfa-secret"></code>
+        <label class="settings-label" for="mfa-code">Verification code</label>
+        <input id="mfa-code" class="mfa-code-input" type="text" inputmode="numeric" maxlength="6"
+          autocomplete="one-time-code" placeholder="123456">
+        <button type="button" class="btn-main" id="mfa-verify-btn">Verify and enable MFA</button>
+      </div>
+      <p id="mfa-message" class="mfa-message" role="status" aria-live="polite"></p>
+    </div>
+
     <button id="dark-mode-toggle" type="button"></button>
   </div>
 
@@ -37,6 +54,7 @@
   <script src="../js/api/quiz.js"></script>
   <script src="../js/api/leaderboard.js"></script>
   <script src="../js/api/profile.js"></script>
+  <script src="../js/api/mfa.js"></script>
 
   <!-- UI helpers -->
   <script src="../js/i18n.js"></script>
@@ -46,6 +64,50 @@
     requireLogin();
     document.getElementById("logout-btn").addEventListener("click", logout);
     setupSiteSettings();
+
+    var setupButton = document.getElementById("mfa-setup-btn");
+    var setupPanel = document.getElementById("mfa-setup-panel");
+    var verifyButton = document.getElementById("mfa-verify-btn");
+    var codeInput = document.getElementById("mfa-code");
+    var message = document.getElementById("mfa-message");
+
+    function mfaMessage(text, error) {
+      message.textContent = text;
+      message.className = error ? "mfa-message error-inline" : "mfa-message success-message";
+    }
+
+    setupButton.addEventListener("click", async function () {
+      setupButton.disabled = true;
+      try {
+        var setup = await setupMfa();
+        document.getElementById("mfa-qr-code").innerHTML = setup.qr_code_svg;
+        document.getElementById("mfa-secret").textContent = setup.secret;
+        setupPanel.hidden = false;
+        codeInput.focus();
+        mfaMessage("Scan the QR code and enter the six-digit code.", false);
+      } catch (error) {
+        setupButton.disabled = false;
+        mfaMessage(error.message, true);
+      }
+    });
+
+    verifyButton.addEventListener("click", async function () {
+      var code = codeInput.value.trim();
+      if (!/^\d{6}$/.test(code)) {
+        mfaMessage("Enter the six-digit authenticator code.", true);
+        return;
+      }
+      verifyButton.disabled = true;
+      try {
+        await verifyMfaSetup(code);
+        setupButton.textContent = "MFA enabled";
+        setupPanel.hidden = true;
+        mfaMessage("MFA is enabled for your next login.", false);
+      } catch (error) {
+        verifyButton.disabled = false;
+        mfaMessage(error.message, true);
+      }
+    });
   </script>
 </body>
 

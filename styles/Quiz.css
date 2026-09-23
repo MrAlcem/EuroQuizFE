@@ -15,6 +15,18 @@ body::after {
     position: fixed;
     inset: 0;
     z-index: -1;
+.quiz-level {
+    margin: -12px 0 18px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.question {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 22px;
+    line-height: 1.4;
+}
 
     background-repeat: no-repeat;
     background-size: cover;

@@ -11,6 +11,22 @@ async function fetchQuizQuestions() {
         throw new Error("Failed to load questions");
     }
 
+    async function fetchQuizSession(daily) {
+        var res = await authFetch(API_BASE + (daily ? "/quiz/daily" : "/quiz/start"), { method: "GET" });
+        if (!res.ok) throw new Error("Failed to start quiz");
+        return await res.json();
+    }
+
+    async function answerQuizQuestion(sessionId, chosenOption) {
+        var res = await authFetch(API_BASE + "/quiz/sessions/" + sessionId + "/answer", {
+            method: "POST",
+            body: JSON.stringify({ chosen_option: chosenOption })
+        });
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Failed to submit answer");
+        return data;
+    }
+
     var body = await res.json();
     return body.data;
 }
