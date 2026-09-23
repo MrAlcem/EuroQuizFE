@@ -15,9 +15,23 @@
     border-radius: 10px;
 }
 
-.mfa-setup-panel[hidden] { display: none; }
-.mfa-qr-code { width: 192px; max-width: 100%; margin: 12px auto 16px; background: #fff; }
-.mfa-qr-code svg { display: block; width: 100%; height: auto; }
+.mfa-setup-panel[hidden] {
+    display: none;
+}
+
+.mfa-qr-code {
+    width: 192px;
+    max-width: 100%;
+    margin: 12px auto 16px;
+    background: #fff;
+}
+
+.mfa-qr-code svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
 .mfa-secret {
     display: block;
     margin-bottom: 16px;
@@ -26,6 +40,7 @@
     background: #f1f5f9;
     border-radius: 6px;
 }
+
 .mfa-code-input {
     width: 100%;
     box-sizing: border-box;
@@ -36,8 +51,15 @@
     font: inherit;
     letter-spacing: 4px;
 }
-.mfa-message { min-height: 20px; margin: 12px 0 0; }
-.success-message { color: #15803d; }
+
+.mfa-message {
+    min-height: 20px;
+    margin: 12px 0 0;
+}
+
+.success-message {
+    color: #15803d;
+}
 
 .settings-label {
     display: block;
@@ -66,4 +88,16 @@ body.dark-mode #language-select {
     background: #0f172a;
     color: #f1f5f9;
     border-color: #334155;
+}
+
+/* Theme */
+
+.theme-container {
+    padding: 5px 0;
+    margin: 5px 0;
+}
+
+.theme-container input {
+    width: 15px;
+    height: 15px;
 }
