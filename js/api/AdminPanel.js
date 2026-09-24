@@ -90,6 +90,8 @@ $(document).ready(function () {
     function previewText(translations) {
         if (!translations) return "";
         return translations.en || Object.values(translations)[0] || "";
+    }
+
     function showAdminFeedback(message, type) {
         var $feedback = $("#admin-feedback");
         window.clearTimeout(feedbackTimeout);
