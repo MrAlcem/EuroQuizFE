@@ -19,25 +19,25 @@
         </div>
 
         <nav class="nav">
-            <a href="#" class="nav-item active">
+            <a href="#dashboard" class="nav-item active" data-admin-section="dashboard">
                 <i class="fas fa-th-large"></i> Dashboard
             </a>
-            <a href="#" class="nav-item">
+            <a href="#questions" class="nav-item" data-admin-section="questions">
                 <i class="fas fa-list"></i> Questions
             </a>
-            <a href="#" class="nav-item">
+            <a href="#add-question" class="nav-item" data-admin-section="add-question">
                 <i class="fas fa-plus"></i> Add Question
             </a>
-            <a href="#" class="nav-item">
+            <a href="#users" class="nav-item" data-admin-section="users">
                 <i class="fas fa-users"></i> Users
             </a>
-            <a href="#" class="nav-item">
+            <a href="#results" class="nav-item" data-admin-section="results">
                 <i class="fas fa-chart-bar"></i> Results
             </a>
-            <a href="#" class="nav-item">
+            <a href="#categories" class="nav-item" data-admin-section="categories">
                 <i class="fas fa-tags"></i> Categories
             </a>
-            <a href="#" class="nav-item">
+            <a href="#settings" class="nav-item" data-admin-section="settings">
                 <i class="fas fa-cog"></i> Settings
             </a>
         </nav>
@@ -59,9 +59,10 @@
                 <button type="button" class="btn" style="width:auto;margin-top:0;" id="admin-logout-btn">Logout</button>
             </div>
         </div>
+        <div id="admin-feedback" class="admin-feedback" role="status" aria-live="polite" hidden></div>
 
         <!-- Stats -->
-        <div class="stats">
+        <div class="stats admin-section" data-admin-section="dashboard">
             <div class="stat-card">
                 <div class="stat-icon blue"><i class="fas fa-book"></i></div>
                 <div class="stat-info">
@@ -92,16 +93,78 @@
             </div>
         </div>
 
+        <div class="dashboard-insights admin-section" data-admin-section="dashboard">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h2>Quiz activity</h2>
+                    <span class="results-count">Last 7 days</span>
+                </div>
+                <div id="activity-chart" class="activity-chart">
+                    <div class="chart-empty">Loading statistics...</div>
+                </div>
+            </div>
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h2>Questions by category</h2>
+                </div>
+                <div id="category-chart" class="bar-chart">
+                    <div class="chart-empty">Loading statistics...</div>
+                </div>
+            </div>
+            <div class="card chart-card">
+                <div class="card-header">
+                    <h2>Questions by difficulty</h2>
+                </div>
+                <div id="difficulty-chart" class="bar-chart">
+                    <div class="chart-empty">Loading statistics...</div>
+                </div>
+            </div>
+            <div class="card chart-card score-summary-card">
+                <div class="card-header">
+                    <h2>Score overview</h2>
+                </div>
+                <div class="score-summary">
+                    <div><strong id="stat-total-score">-</strong><span>Total points</span></div>
+                    <div><strong id="stat-average-score">-</strong><span>Average result</span></div>
+                </div>
+            </div>
+        </div>
+
         <!-- Content grid -->
         <div class="content">
             <!-- LEFT COLUMN -->
             <div>
                 <!-- Recent Questions -->
-                <div class="card">
+                <div class="card admin-section" data-admin-section="questions">
                     <div class="card-header">
                         <h2>Recent Questions</h2>
-                        <a href="#">View all questions</a>
+                        <a href="#questions" data-admin-section="questions">View all questions</a>
                     </div>
+                    <div class="question-filters">
+                        <input type="search" id="questions-search" placeholder="Search question text">
+                        <select id="questions-category-filter">
+                            <option value="">All categories</option>
+                        </select>
+                        <select id="questions-country-filter">
+                            <option value="">All countries</option>
+                        </select>
+                        <select id="questions-difficulty-filter">
+                            <option value="">All difficulties</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                        <button type="button" class="btn questions-filter-button" id="questions-filter-btn">Filter</button>
+                    </div>
+                    <div class="question-import-export">
+                        <label for="questions-import-file">Import CSV (max. 500 questions, 5 MB)</label>
+                        <input type="file" id="questions-import-file" accept=".csv,text/csv">
+                        <button type="button" class="btn" id="questions-import-btn">Import questions</button>
+                        <button type="button" class="btn" id="questions-export-btn">Export all questions</button>
+                        <small>Required CSV headers: question_text, option_a, option_b, option_c, option_d, correct_option, category, country, difficulty. time_limit_seconds is optional.</small>
+                    </div>
+                    <p class="error-inline" id="questions-import-export-status" role="status" aria-live="polite" hidden></p>
+                    <p class="error-inline" id="questions-error" hidden></p>
 
                     <table id="questions-table">
                         <thead>
@@ -118,35 +181,91 @@
                             <!-- Rows rendered by JavaScript from GET /admin/questions -->
                         </tbody>
                     </table>
+                    <div class="question-pagination">
+                        <span id="questions-page-summary">-</span>
+                        <div>
+                            <button type="button" class="pagination-button" id="questions-prev-btn">Previous</button>
+                            <button type="button" class="pagination-button" id="questions-next-btn">Next</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- User Overview -->
-                <div class="card">
+                <div class="card admin-section" data-admin-section="users">
                     <div class="card-header">
                         <h2>User Overview</h2>
                     </div>
-                    <table>
+                    <div class="user-filters">
+                        <input type="search" id="users-search" placeholder="Search name or email">
+                        <select id="users-role-filter">
+                                <option value="">All roles</option>
+                                <option value="user">Users</option>
+                                <option value="admin">Admins</option>
+                        </select>
+                        <button type="button" class="btn users-filter-button" id="users-filter-btn">Filter</button>
+                    </div>
+                    <p class="error-inline" id="users-error" hidden></p>
+                    <table id="users-table">
                         <thead>
-                            <tr>
+                                <tr>
                                 <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
+                                <th>Role</th>
                                 <th>Level</th>
                                 <th>Total Score</th>
                                 <th>Joined</th>
-                            </tr>
+                                <th>Actions</th>
+                                </tr>
                         </thead>
                         <tbody id="users-table-body">
-                            <!-- Rows rendered by JavaScript from GET /admin/users -->
+                                <!-- Rows rendered by JavaScript from GET /admin/users -->
                         </tbody>
                     </table>
+                    <div id="user-edit-panel" class="user-edit-panel" hidden>
+                        <div class="card-header">
+                                <h3>Edit User</h3>
+                                <button type="button" class="close-button" id="cancel-user-edit-btn">Close</button>
+                        </div>
+                        <input type="hidden" id="edit-user-id">
+                        <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-user-name">Name</label>
+                                    <input type="text" id="edit-user-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-user-email">Email</label>
+                                    <input type="email" id="edit-user-email">
+                                </div>
+                        </div>
+                        <div class="form-row">
+                                <div class="form-group">
+                                    <label for="edit-user-role">Role</label>
+                                    <select id="edit-user-role">
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit-user-password">New password</label>
+                                    <input type="password" id="edit-user-password" minlength="8"
+                                        placeholder="Leave blank to keep current">
+                                </div>
+                        </div>
+                        <label class="checkbox-row">
+                                <input type="checkbox" id="edit-user-reset-mfa">
+                                Reset MFA configuration
+                        </label>
+                        <p class="error-inline" id="user-form-error" hidden></p>
+                        <button type="button" class="btn" id="save-user-btn">Save User</button>
+                    </div>
                 </div>
             </div>
 
             <!-- RIGHT COLUMN -->
             <div>
                 <!-- Add / Edit Question -->
-                <div class="card">
+                <div class="card admin-section" data-admin-section="add-question">
                     <div class="card-header">
                         <h2 id="question-form-title">Add New Question</h2>
                     </div>
@@ -160,20 +279,13 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Country</label>
-                            <select id="question-nation">
-                                <option value="NL">Netherlands</option>
-                                <option value="HR">Croatia</option>
-                            </select>
+                            <label for="question-nation">Country code</label>
+                            <input type="text" id="question-nation" list="question-country-options" maxlength="2" placeholder="e.g. NL" autocomplete="off">
+                            <datalist id="question-country-options"></datalist>
                         </div>
                         <div class="form-group">
                             <label>Category</label>
-                            <select id="question-category">
-                                <option>Geography</option>
-                                <option>Nature</option>
-                                <option>History</option>
-                                <option>Culture</option>
-                            </select>
+                            <select id="question-category"></select>
                         </div>
                     </div>
 
@@ -243,7 +355,7 @@
                 </div>
 
                 <!-- Question Distribution -->
-                <div class="card">
+                <div class="card admin-section" data-admin-section="dashboard">
                     <div class="card-header">
                         <h2>Question Distribution</h2>
                     </div>
@@ -254,19 +366,99 @@
                                 <small>QUESTIONS</small>
                             </div>
                         </div>
-                        <div class="legend">
-                            <div class="legend-item">
-                                <span class="dot blue"></span>
-                                Croatia (HR) <span style="margin-left:auto;" id="distribution-hr">-</span>
-                            </div>
-                            <div class="legend-item">
-                                <span class="dot green"></span>
-                                Netherlands (NL) <span style="margin-left:auto;" id="distribution-nl">-</span>
-                            </div>
-                        </div>
+                        <div class="legend" id="distribution-legend"></div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="card admin-section-placeholder" data-admin-section="results" hidden>
+            <div class="card-header">
+                <h2>Quiz Results</h2>
+                <span id="results-count" class="results-count">-</span>
+            </div>
+            <div class="result-filters">
+                <input type="search" id="results-search" placeholder="Search player name or email">
+                <label>
+                    <input type="checkbox" id="results-daily">
+                    Daily challenges only
+                </label>
+                <input type="date" id="results-from" aria-label="Results from date">
+                <input type="date" id="results-to" aria-label="Results to date">
+                <button type="button" class="btn results-filter-button" id="results-filter-btn">Filter</button>
+            </div>
+            <p class="error-inline" id="results-error" hidden></p>
+            <div class="table-scroll">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Player</th>
+                            <th>Score</th>
+                            <th>Correct</th>
+                            <th>Lives</th>
+                            <th>XP</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table-body">
+                        <tr><td colspan="9">Loading results...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="result-detail" class="result-detail" hidden></div>
+        </div>
+
+        <div class="card admin-section-placeholder" data-admin-section="categories" hidden>
+            <div class="card-header">
+                <h2>Categories</h2>
+                <span id="categories-count" class="results-count">-</span>
+            </div>
+            <div class="category-form">
+                <input type="hidden" id="edit-category-id">
+                <input type="text" id="category-name" maxlength="255" placeholder="Category name">
+                <button type="button" class="btn category-button" id="save-category-btn">Add Category</button>
+                <button type="button" class="btn category-cancel-button" id="cancel-category-btn" hidden>Cancel</button>
+            </div>
+            <p class="error-inline" id="category-form-error" hidden></p>
+            <table id="categories-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Questions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-table-body">
+                    <tr><td colspan="3">Loading categories...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card admin-section-placeholder" data-admin-section="settings" hidden>
+            <div class="card-header">
+                <h2>Quiz Settings</h2>
+                <span id="settings-status" class="results-count"></span>
+            </div>
+            <p class="settings-description">Changes apply to newly started quiz sessions.</p>
+            <div class="settings-grid">
+                <div class="form-group"><label for="setting-quiz-length">Questions per quiz</label><input type="number" id="setting-quiz-length" min="1" max="50"></div>
+                <div class="form-group"><label for="setting-lives">Lives</label><input type="number" id="setting-lives" min="1" max="10"></div>
+                <div class="form-group"><label for="setting-timer-seconds">Timer per question (seconds)</label><input type="number" id="setting-timer-seconds" min="5" max="300"></div>
+                <div class="form-group"><label for="setting-streak-length">Streak length</label><input type="number" id="setting-streak-length" min="1" max="20"></div>
+                <div class="form-group"><label for="setting-easy-questions">Easy questions</label><input type="number" id="setting-easy-questions" min="0" max="50"></div>
+                <div class="form-group"><label for="setting-medium-questions">Medium questions</label><input type="number" id="setting-medium-questions" min="0" max="50"></div>
+                <div class="form-group"><label for="setting-hard-questions">Hard questions</label><input type="number" id="setting-hard-questions" min="0" max="50"></div>
+                <div class="form-group"><label for="setting-easy-points">Points: easy</label><input type="number" id="setting-easy-points" min="0" max="1000"></div>
+                <div class="form-group"><label for="setting-medium-points">Points: medium</label><input type="number" id="setting-medium-points" min="0" max="1000"></div>
+                <div class="form-group"><label for="setting-hard-points">Points: hard</label><input type="number" id="setting-hard-points" min="0" max="1000"></div>
+                <div class="form-group"><label for="setting-streak-bonus">Streak bonus</label><input type="number" id="setting-streak-bonus" min="0" max="1000"></div>
+                <div class="form-group"><label for="setting-daily-bonus">Daily bonus</label><input type="number" id="setting-daily-bonus" min="0" max="1000"></div>
+            </div>
+            <p class="error-inline" id="settings-error" hidden></p>
+            <button type="button" class="btn settings-save-button" id="save-settings-btn">Save Settings</button>
         </div>
     </main>
 

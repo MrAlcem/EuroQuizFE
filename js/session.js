@@ -80,7 +80,10 @@ function logout() {
 async function authFetch(url, options) {
     options = options || {};
     options.headers = options.headers || {};
-    options.headers["Content-Type"] = "application/json";
+    options.headers["Accept"] = "application/json";
+    if (!(options.body instanceof FormData)) {
+        options.headers["Content-Type"] = "application/json";
+    }
 
     var token = getToken();
     if (token) {

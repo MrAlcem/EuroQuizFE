@@ -97,6 +97,15 @@ var translations = {
     }
 };
 
+translations.en.loadingQuizOptions = "Loading quiz filters...";
+translations.en.failedQuizOptions = "Could not load quiz filters";
+translations.hr.loadingQuizOptions = "U\u010Ditavanje filtara kviza...";
+translations.hr.failedQuizOptions = "Filtre kviza nije mogu\u0107e u\u010Ditati";
+translations.nl.loadingQuizOptions = "Quizfilters laden...";
+translations.nl.failedQuizOptions = "Quizfilters laden mislukt";
+translations.se.loadingQuizOptions = "Laddar quizfilter...";
+translations.se.failedQuizOptions = "Kunde inte ladda quizfilter";
+
 function getLanguage() {
     return localStorage.getItem("language") || "en";
 }
