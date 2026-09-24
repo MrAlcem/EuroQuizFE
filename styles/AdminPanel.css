@@ -327,6 +327,20 @@ body {
     gap: 24px;
 }
 
+.content[data-active-section="add-question"] {
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.content[data-active-section="add-question"] > div:first-child {
+    display: none;
+}
+
+.content[data-active-section="add-question"] > div:last-child {
+    width: 100%;
+    max-width: 700px;
+}
+
 .card {
     background: white;
     border: 1px solid #e2e8f0;

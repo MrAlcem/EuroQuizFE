@@ -38,6 +38,8 @@ $(document).ready(function () {
             $(this).toggleClass("active", $(this).data("admin-section") === section);
         });
 
+        $(".content").attr("data-active-section", section);
+
         if (window.location.hash !== "#" + section) {
             window.history.replaceState(null, "", "#" + section);
         }
@@ -90,6 +92,8 @@ $(document).ready(function () {
     function previewText(translations) {
         if (!translations) return "";
         return translations.en || Object.values(translations)[0] || "";
+    }
+
     function showAdminFeedback(message, type) {
         var $feedback = $("#admin-feedback");
         window.clearTimeout(feedbackTimeout);

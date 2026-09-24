@@ -58,9 +58,9 @@ a:hover {
    beat the browser's default [hidden] rule. */
 .nav-daily-wrap:not([hidden]) {
     display: inline-flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 }
 
 #nav-daily-link {

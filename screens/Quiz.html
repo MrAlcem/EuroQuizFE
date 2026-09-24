@@ -12,7 +12,6 @@
 <body>
   <div class="container">
     <button id="dark-mode-toggle" type="button"></button>
-    <a href="../screens/Options.html" class="btn-text" data-i18n="options">Options</a>
     <select id="language-select" class="lang-select">
       <option value="en" data-i18n="english">English</option>
       <option value="hr" data-i18n="croatian">Croatian</option>
@@ -21,7 +20,12 @@
     </select>
     <div id="quiz-screen">
       <div class="top-bar">
-        <a href="../screens/home.html" class="btn-text" data-i18n="home">Home</a>
+        <a href="../screens/home.html" class="btn-home">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M12 3.2 3 10.6V21h6v-6h6v6h6V10.6L12 3.2z"/>
+          </svg>
+          <span data-i18n="home">Home</span>
+        </a>
       </div>
 
       <div class="header">
@@ -35,6 +39,7 @@
       <div class="question" id="question-text" data-i18n="loading">Loading...</div>
       <div id="options"></div>
       <div class="error-inline" id="quiz-error" style="display:none;"></div>
+      <a href="../screens/FindYourQuiz.html" class="btn-main" id="choose-another-quiz-btn" style="display:none;" data-i18n="chooseAnotherQuiz">Choose another quiz</a>
 
       <button type="button" class="btn-main quiz-action-btn" id="submit-btn" disabled data-i18n="submitAnswer">Submit Answer</button>
       <button type="button" class="btn-main quiz-action-btn" id="next-btn" style="display:none;" data-i18n="nextQuestion">Next
@@ -113,6 +118,7 @@
       document.getElementById("quiz-error").style.display = "none";
       document.getElementById("play-again-btn").style.display = "";
       document.getElementById("daily-reset-note").style.display = "none";
+      document.getElementById("choose-another-quiz-btn").style.display = "none";
       dailyResetsAtIso = null;
 
       try {
@@ -145,6 +151,9 @@
         var error = document.getElementById("quiz-error");
         error.textContent = err.message || "Failed to load questions";
         error.style.display = "block";
+        if (!isDaily && (quizCategory || quizCountry)) {
+          document.getElementById("choose-another-quiz-btn").style.display = "block";
+        }
         return;
       }
 
@@ -226,7 +235,7 @@
       document.getElementById("submit-btn").disabled = false;
     }
 
-    async function submitAnswer(chosenOption) {
+    async function submitAnswer(chosenOption, timedOut) {
       document.getElementById("submit-btn").style.display = "none";
       stopTimer();
 
@@ -252,6 +261,15 @@
         document.getElementById("next-btn").style.display = "block";
         document.getElementById("next-btn").textContent =
           answer.finished ? t("seeResults") : t("nextQuestion");
+
+        // Time ran out with no answer chosen: don't wait on the player to
+        // click "Next Question" — briefly show the correct answer, then move
+        // on automatically.
+        if (timedOut) {
+          setTimeout(function () {
+            document.getElementById("next-btn").click();
+          }, 1500);
+        }
       } catch (err) {
         var submitError = document.getElementById("quiz-error");
         submitError.textContent = err.message;
@@ -291,7 +309,7 @@
           stopTimer();
           // No answer chosen in time; the server independently re-checks
           // the timeout too, so this is just an honest "no answer" signal.
-          submitAnswer(null);
+          submitAnswer(null, true);
         }
       }, 1000);
     }
@@ -324,7 +342,7 @@
       document.getElementById("play-again-btn").style.display = "none";
       var note = document.getElementById("daily-reset-note");
       note.textContent = t("dailyAlreadyPlayed") + " " + t("dailyResetsAt") + " " +
-        new Date(resetsAtIso).toLocaleString();
+        new Date(resetsAtIso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       note.style.display = "block";
     }
 

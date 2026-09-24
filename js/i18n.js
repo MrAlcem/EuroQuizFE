@@ -25,9 +25,8 @@ var translations = {
         cat1: "Geography", cat2: "Nature", cat3: "History", cat4: "Culture", country: "Any country",
         ctry1: "Croatia", ctry2: "Netherlands", ctry3: "Sweden", time: "Time", historyDesc: "Click a quiz to review your answers.",
         adminPanel: "Admin Panel",
-        dailyAlreadyPlayed: "You've already played today's Daily Challenge.", dailyResetsAt: "Next one unlocks at"
-        ctry1: "Croatia", ctry2: "Netherlands", ctry3: "Sweden", time: "Time",
-        historyDesc: "Click a quiz to review your answers.", swedish: "Swedish"
+        dailyAlreadyPlayed: "You've already played today's Daily Challenge.", dailyResetsAt: "Next one unlocks at",
+        chooseAnotherQuiz: "Choose another quiz"
     },
     hr: {
         darkMode: "Tamni način", lightMode: "Svijetli način",
@@ -51,7 +50,8 @@ var translations = {
         cat1: "Geografija", cat2: "Priroda", cat3: "Povijest", cat4: "Kultura", country: "Bilo koja zemlja",
         ctry1: "Hrvatska", ctry2: "Nizozemska", ctry3: "Švedska", time: "Vrijeme", historyDesc: "Kliknite na kviz da pregledate svoje odgovore.",
         adminPanel: "Administratorska ploča",
-        dailyAlreadyPlayed: "Već ste odigrali današnji Dnevni izazov.", dailyResetsAt: "Sljedeći izazov dostupan je u"
+        dailyAlreadyPlayed: "Već ste odigrali današnji Dnevni izazov.", dailyResetsAt: "Sljedeći izazov dostupan je u",
+        chooseAnotherQuiz: "Odaberi drugi kviz"
     },
     nl: {
         darkMode: "Donkere modus", lightMode: "Lichte modus",
@@ -75,9 +75,8 @@ var translations = {
         cat1: "Geografie", cat2: "Natuur", cat3: "Geschiedenis", cat4: "Cultuur", country: "Elk land",
         ctry1: "Kroatië", ctry2: "Nederland", ctry3: "Zweden", time: "Tijd", historyDesc: "Klik op een quiz om je antwoorden te bekijken.",
         adminPanel: "Beheerderspaneel",
-        dailyAlreadyPlayed: "Je hebt de Dagelijkse uitdaging van vandaag al gespeeld.", dailyResetsAt: "Volgende uitdaging ontgrendelt om"
-        ctry1: "Kroatië", ctry2: "Nederland", ctry3: "Zweden", time: "Tijd",
-        historyDesc: "Klik op een quiz om je antwoorden te bekijken.", swedish: "Svenska"
+        dailyAlreadyPlayed: "Je hebt de Dagelijkse uitdaging van vandaag al gespeeld.", dailyResetsAt: "Volgende uitdaging ontgrendelt om",
+        chooseAnotherQuiz: "Kies een andere quiz"
     },
     se: {
         darkMode: "Mörkt läge", lightMode: "Ljust läge",
@@ -101,9 +100,8 @@ var translations = {
         cat1: "Geografi", cat2: "Natur", cat3: "Historia", cat4: "Kultur", country: "Valfritt land",
         ctry1: "Kroatien", ctry2: "Nederländerna", ctry3: "Sverige", time: "Tid", historyDesc: "Klicka på ett quiz för att granska dina svar.",
         adminPanel: "Adminpanel",
-        dailyAlreadyPlayed: "Du har redan spelat dagens Dagliga utmaning.", dailyResetsAt: "Nästa utmaning låses upp"
-        ctry1: "Kroatien", ctry2: "Nederländerna", ctry3: "Sverige", time: "Tid",
-        historyDesc: "Klicka på ett quiz för att granska dina svar.", swedish: "Zweeds"
+        dailyAlreadyPlayed: "Du har redan spelat dagens Dagliga utmaning.", dailyResetsAt: "Nästa utmaning låses upp",
+        chooseAnotherQuiz: "Välj en annan quiz"
     }
 };
 
