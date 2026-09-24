@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EuroQuiz - Home</title>
-    <link rel="stylesheet" href="../styles/Home.css">
+    <link rel="stylesheet" href="../styles/home.css">
 </head>
 
 <body>
@@ -13,63 +13,124 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-links">
-            <a href="../screens/Quiz.html" class="active">Play</a>
-            <a href="../screens/Leaderboard.html">Leaderboard</a>
-            <a href="../screens/Login.html">Log in</a>
+            <a href="Quiz.html" class="active">Play</a>
+            <a href="Leaderboard.html">Leaderboard</a>
+            <span class="nav-daily-wrap" id="nav-daily-wrap" hidden>
+                <a href="Quiz.html?daily=1" id="nav-daily-link" data-i18n="dailyQuiz">Daily Challenge</a>
+                <span id="nav-daily-timer" class="nav-daily-timer" hidden></span>
+            </span>
+            <a href="Options.html" id="nav-options-link" data-i18n="options" hidden>Options</a>
+            <a href="AdminPanel.html" id="nav-admin-link" data-i18n="adminPanel" hidden>Admin Panel</a>
         </div>
-        <a href="../screens/Register.html" class="btn-primary">Register</a>
+        <div id="navbar-guest-actions">
+            <a href="login.html">Log in</a>
+            <a href="Register.html" class="btn-primary">Register</a>
+        </div>
+        <div id="navbar-user-actions" class="navbar-user" hidden>
+            <span id="navbar-username"></span>
+            <button type="button" class="btn-primary" id="navbar-logout-btn" data-i18n="logout">Logout</button>
+        </div>
     </nav>
 
-    <!-- HERO: logo | text | photos -->
-    <section class="hero">
+    <!-- GUEST VIEW: marketing landing content -->
+    <div id="guest-view">
 
-        <div class="hero-logo">
-            <img src="../res/images/Logo.png" alt="EuroQuiz">
-        </div>
+        <!-- HERO: logo | text | photos -->
+        <section class="hero">
 
-        <div class="hero-text">
-            <div class="hero-eyebrow">SEASON 1 &middot; SE / HR / NL</div>
-            <h1><span class="highlight-red">Three</span> countries.<br><span class="highlight-blue">One</span> <span
-                    class="highlight">leaderboard.</span></h1>
-            <p>Sweden, Croatia and the Netherlands, all mixed into one trivia deck. 10 questions, 3 lives, bragging
-                rights on the line.</p>
-            <div class="hero-actions">
-                <a href="../screens/Quiz.html" class="btn-dark">Start a quiz</a>
-                <a href="#countries" class="link-underline">Meet the countries</a>
+            <div class="hero-logo">
+                <img src="../res/images/Logo.png" alt="EuroQuiz">
             </div>
-        </div>
 
-        <div class="hero-collage">
-            <div class="collage-item moose">
-                <img src="../res/images/Moose.jpg" alt="Moose">
-                <div class="collage-caption">SWEDEN &middot; MOOSE</div>
-            </div>
-            <div class="collage-item marten">
-                <img src="../res/images/Marten.png" alt="Pine marten">
-                <div class="collage-caption">CROATIA &middot; MARTEN</div>
-            </div>
-            <div class="collage-item lion">
-                <img src="../res/images/Lion.jpg" alt="Lion">
-                <div class="collage-caption">NL &middot; LION</div>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- COUNTRY BANDS -->
-    <section id="countries" class="countries">
-
-        <div class="country-band band-sweden">
-            <div class="country-content">
-                <div class="country-text">
-                    <div class="name">Sweden</div>
-                    <div class="desc">Fika, flatpack furniture and midnight sun &mdash; 47 questions test how well you
-                        actually know it.</div>
+            <div class="hero-text">
+                <div class="hero-eyebrow">SEASON 1 &middot; SE / HR / NL</div>
+                <h1><span class="highlight-red">Three</span> countries.<br><span class="highlight-blue">One</span> <span
+                        class="highlight">leaderboard.</span></h1>
+                <p>Sweden, Croatia and the Netherlands, all mixed into one trivia deck. 10 questions, 3 lives, bragging
+                    rights on the line.</p>
+                <div class="hero-actions">
+                    <a href="Register.html" class="btn-dark">Find your quiz</a>
+                    <a href="#countries" class="link-underline">Meet the countries</a>
                 </div>
-                <div class="country-badge yellow">47 questions</div>
             </div>
-        </div>
 
+            <div class="hero-collage">
+                <div class="collage-item moose">
+                    <img src="../res/images/Moose.jpg" alt="Moose">
+                    <div class="collage-caption">SWEDEN &middot; MOOSE</div>
+                </div>
+                <div class="collage-item marten">
+                    <img src="../res/images/Marten.png" alt="Pine marten">
+                    <div class="collage-caption">CROATIA &middot; MARTEN</div>
+                </div>
+                <div class="collage-item lion">
+                    <img src="../res/images/Lion.jpg" alt="Lion">
+                    <div class="collage-caption">NL &middot; LION</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- COUNTRY BANDS -->
+        <section id="countries" class="countries">
+
+            <div class="country-band band-sweden">
+                <div class="country-content">
+                    <div class="country-text">
+                        <div class="name">Sweden</div>
+                        <div class="desc">Fika, flatpack furniture and midnight sun &mdash; 47 questions test how well you
+                            actually know it.</div>
+                    </div>
+                    <div class="country-badge yellow">47 questions</div>
+                </div>
+            </div>
+
+            <div class="country-band band-croatia">
+                <div class="coa">
+                    <div class="coa-crown">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div class="coa-shield">
+                        <div class="coa-checker">
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                            <div style="background:#ffffff;"></div>
+                            <div style="background:#FF0000;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="country-content reverse">
+                    <div class="country-text right">
+                        <div class="name">Croatia</div>
+                        <div class="desc">Adriatic coastlines, Roman ruins and a thousand islands &mdash; 48 questions on
+                            offer.</div>
+                    </div>
+                    <div class="country-badge dark">48 questions</div>
         <div class="country-band band-croatia">
             <img src="../res/images/cro_shield.jpg" class="cro_grb">
 
@@ -79,110 +140,175 @@
                     <div class="desc">Adriatic coastlines, Roman ruins and a thousand islands &mdash; 48 questions on
                         offer.</div>
                 </div>
-                <div class="country-badge dark">48 questions</div>
             </div>
-        </div>
 
-        <div class="country-band band-netherlands">
-            <div class="country-content">
-                <div class="country-text">
-                    <div class="name">Netherlands</div>
-                    <div class="desc">Canals, cycling and questionable weather &mdash; 47 questions to prove you paid
-                        attention.</div>
+            <div class="country-band band-netherlands">
+                <div class="country-content">
+                    <div class="country-text">
+                        <div class="name">Netherlands</div>
+                        <div class="desc">Canals, cycling and questionable weather &mdash; 47 questions to prove you paid
+                            attention.</div>
+                    </div>
+                    <div class="country-badge yellow">47 questions</div>
                 </div>
-                <div class="country-badge yellow">47 questions</div>
-            </div>
-        </div>
-
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="how-it-works">
-        <div class="step-card">
-            <div class="step-number">01</div>
-            <div class="step-title">Get 10 random questions</div>
-            <div class="step-desc">Pulled from all three countries, every round.</div>
-        </div>
-        <div class="step-card">
-            <div class="step-number">02</div>
-            <div class="step-title">Guard your 3 lives</div>
-            <div class="step-desc">One wrong answer, one life gone.</div>
-        </div>
-        <div class="step-card">
-            <div class="step-number">03</div>
-            <div class="step-title">Climb the board</div>
-            <div class="step-desc">Points stack up with every round you play.</div>
-        </div>
-    </section>
-
-    <!-- LEADERBOARD -->
-    <section class="leaderboard-section">
-        <div class="leaderboard-heading">
-            <h2>Climb the leaderboard</h2>
-            <p>Every finished quiz adds to your total score.</p>
-        </div>
-
-        <div class="leaderboard-table">
-            <div class="lb-row header">
-                <div>#</div>
-                <div>PLAYER</div>
-                <div>MOSTLY</div>
-                <div style="text-align:right;">SCORE</div>
             </div>
 
-            <div class="lb-row top">
-                <div class="lb-rank">1</div>
-                <div class="lb-name">quizmaster</div>
-                <div class="lb-flag solid"></div>
-                <div class="lb-score">1,520</div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="how-it-works">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <div class="step-title">Get 10 random questions</div>
+                <div class="step-desc">Pulled from all three countries, every round.</div>
             </div>
-            <div class="lb-row">
-                <div class="lb-rank">2</div>
-                <div class="lb-name">croatiafan</div>
-                <div class="lb-flag">
-                    <div style="background:#DC2626;"></div>
-                    <div style="background:#fff;"></div>
-                    <div style="background:#1D4ED8;"></div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <div class="step-title">Guard your 3 lives</div>
+                <div class="step-desc">One wrong answer, one life gone.</div>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <div class="step-title">Climb the board</div>
+                <div class="step-desc">Points stack up with every round you play.</div>
+            </div>
+        </section>
+
+        <!-- LEADERBOARD -->
+        <section class="leaderboard-section">
+            <div class="leaderboard-heading">
+                <h2>Climb the leaderboard</h2>
+                <p>Every finished quiz adds to your total score.</p>
+            </div>
+
+            <div class="leaderboard-table">
+                <div class="lb-row header">
+                    <div>#</div>
+                    <div>PLAYER</div>
+                    <div>MOSTLY</div>
+                    <div style="text-align:right;">SCORE</div>
                 </div>
-                <div class="lb-score">980</div>
-            </div>
-            <div class="lb-row">
-                <div class="lb-rank">3</div>
-                <div class="lb-name">nl_jensen</div>
-                <div class="lb-flag">
-                    <div style="background:#AE1C28;"></div>
-                    <div style="background:#fff;"></div>
-                    <div style="background:#21468B;"></div>
+
+                <div class="lb-row top">
+                    <div class="lb-rank">1</div>
+                    <div class="lb-name">quizmaster</div>
+                    <div class="lb-flag solid"></div>
+                    <div class="lb-score">1,520</div>
                 </div>
-                <div class="lb-score">875</div>
-            </div>
-            <div class="lb-row">
-                <div class="lb-rank">4</div>
-                <div class="lb-name">se_viktor</div>
-                <div class="lb-flag solid"></div>
-                <div class="lb-score">690</div>
-            </div>
-            <div class="lb-row">
-                <div class="lb-rank">5</div>
-                <div class="lb-name">hr_mila</div>
-                <div class="lb-flag">
-                    <div style="background:#DC2626;"></div>
-                    <div style="background:#fff;"></div>
-                    <div style="background:#1D4ED8;"></div>
+                <div class="lb-row">
+                    <div class="lb-rank">2</div>
+                    <div class="lb-name">croatiafan</div>
+                    <div class="lb-flag">
+                        <div style="background:#DC2626;"></div>
+                        <div style="background:#fff;"></div>
+                        <div style="background:#1D4ED8;"></div>
+                    </div>
+                    <div class="lb-score">980</div>
                 </div>
-                <div class="lb-score">510</div>
+                <div class="lb-row">
+                    <div class="lb-rank">3</div>
+                    <div class="lb-name">nl_jensen</div>
+                    <div class="lb-flag">
+                        <div style="background:#AE1C28;"></div>
+                        <div style="background:#fff;"></div>
+                        <div style="background:#21468B;"></div>
+                    </div>
+                    <div class="lb-score">875</div>
+                </div>
+                <div class="lb-row">
+                    <div class="lb-rank">4</div>
+                    <div class="lb-name">se_viktor</div>
+                    <div class="lb-flag solid"></div>
+                    <div class="lb-score">690</div>
+                </div>
+                <div class="lb-row">
+                    <div class="lb-rank">5</div>
+                    <div class="lb-name">hr_mila</div>
+                    <div class="lb-flag">
+                        <div style="background:#DC2626;"></div>
+                        <div style="background:#fff;"></div>
+                        <div style="background:#1D4ED8;"></div>
+                    </div>
+                    <div class="lb-score">510</div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA -->
-    <section class="cta-section">
-        <h2>Ready to prove yourself?</h2>
-        <p>Create a free account and take your first quiz in under a minute.</p>
-        <a href="../screens/Register.html" class="btn-cta">Create free account</a>
-    </section>
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Ready to prove yourself?</h2>
+            <p>Create a free account and take your first quiz in under a minute.</p>
+            <a href="Register.html" class="btn-cta">Create free account</a>
+        </section>
 
+    </div>
 
+    <!-- Core -->
+    <script src="../js/session.js"></script>
+
+    <!-- API layer -->
+    <script src="../js/api/auth.js"></script>
+    <script src="../js/api/quiz.js"></script>
+    <script src="../js/api/leaderboard.js"></script>
+    <script src="../js/api/profile.js"></script>
+
+    <!-- UI helpers -->
+    <script src="../js/i18n.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/setup.js"></script>
+    <script>
+        setupSiteSettings();
+
+        // Shows the Daily Challenge pill as done (no more pulsing) and the
+        // unlock time underneath once `dailyChallengeResetsAt` (set by
+        // Quiz.html after playing today's challenge) is still in the future.
+        function updateDailyChallengeNav() {
+            var wrap = document.getElementById("nav-daily-wrap");
+            var link = document.getElementById("nav-daily-link");
+            var timer = document.getElementById("nav-daily-timer");
+            wrap.hidden = false;
+
+            var resetsAt = getDailyChallengeResetsAt();
+            var resetsAtDate = resetsAt ? new Date(resetsAt) : null;
+            var isDone = resetsAtDate && resetsAtDate.getTime() > Date.now();
+
+            link.classList.toggle("completed", Boolean(isDone));
+            timer.hidden = !isDone;
+            timer.textContent = isDone ? t("dailyResetsAt") + " " + resetsAtDate.toLocaleString() : "";
+        }
+
+        (function () {
+            var guestActions = document.getElementById("navbar-guest-actions");
+            var userActions = document.getElementById("navbar-user-actions");
+
+            if (!isLoggedIn()) {
+                return;
+            }
+
+            guestActions.hidden = true;
+            userActions.hidden = false;
+            updateDailyChallengeNav();
+            document.getElementById("nav-options-link").hidden = false;
+            document.getElementById("navbar-username").textContent = getCurrentUser();
+            document.getElementById("navbar-logout-btn").addEventListener("click", logout);
+
+            if (isAdmin()) {
+                document.getElementById("nav-admin-link").hidden = false;
+            }
+
+            // Marketing CTAs point guests to Register; signed-in users should land on the
+            // Find Your Quiz dashboard instead.
+            document.querySelector(".hero-actions .btn-dark").href = "FindYourQuiz.html";
+            var ctaHeading = document.querySelector(".cta-section h2");
+            var ctaText = document.querySelector(".cta-section p");
+            var ctaButton = document.querySelector(".cta-section .btn-cta");
+            ctaHeading.textContent = "Ready for another round?";
+            ctaText.textContent = "Pick a category and country, then jump back in.";
+            ctaButton.textContent = "Find your quiz";
+            ctaButton.href = "FindYourQuiz.html";
+        })();
+    </script>
 </body>
 
 </html>

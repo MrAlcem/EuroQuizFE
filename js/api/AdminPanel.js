@@ -5,6 +5,8 @@
 $(document).ready(function () {
     var questions = [];
     var users = [];
+    var QUESTION_LANGUAGES = ["en", "hr", "se", "nl"];
+    var TRANSLATABLE_FIELDS = ["question-text", "opt-a", "opt-b", "opt-c", "opt-d"];
     var results = [];
     var categories = [];
     var countries = [];
@@ -56,6 +58,38 @@ $(document).ready(function () {
         return $("<div>").text(str == null ? "" : str).html();
     }
 
+    function setQuestionLang(lang) {
+        $("#question-lang-tabs .lang-tab").each(function () {
+            $(this).toggleClass("active", $(this).data("lang") === lang);
+        });
+        $(".lang-field").each(function () {
+            $(this).prop("hidden", $(this).data("lang") !== lang);
+        });
+    }
+
+    function fillLangField(baseId, translations) {
+        translations = translations || {};
+        QUESTION_LANGUAGES.forEach(function (lang) {
+            $("#" + baseId + "-" + lang).val(translations[lang] || "");
+        });
+    }
+
+    function collectLangField(baseId) {
+        var value = {};
+        QUESTION_LANGUAGES.forEach(function (lang) {
+            var text = $("#" + baseId + "-" + lang).val().trim();
+            if (text) value[lang] = text;
+        });
+        return value;
+    }
+
+    $("#question-lang-tabs .lang-tab").on("click", function () {
+        setQuestionLang($(this).data("lang"));
+    });
+
+    function previewText(translations) {
+        if (!translations) return "";
+        return translations.en || Object.values(translations)[0] || "";
     function showAdminFeedback(message, type) {
         var $feedback = $("#admin-feedback");
         window.clearTimeout(feedbackTimeout);
@@ -107,7 +141,8 @@ $(document).ready(function () {
 
     function clearForm() {
         $("#edit-question-id").val("");
-        $("#question-text, #opt-a, #opt-b, #opt-c, #opt-d, #question-time-limit").val("");
+        $(".lang-field").val("");
+        $("#question-time-limit").val("");
         $("input[name='correct-option']").prop("checked", false);
         $("#question-nation").val(countries.indexOf("NL") !== -1 ? "NL" : (countries[0] || ""));
         if (categories.length > 0) {
@@ -117,6 +152,7 @@ $(document).ready(function () {
         $("#question-form-title").text("Add New Question");
         $("#submit-question-btn").text("Add Question Entry");
         $("#cancel-edit-btn").hide();
+        setQuestionLang("en");
         clearFormError();
     }
 
@@ -292,7 +328,7 @@ $(document).ready(function () {
         questions.forEach(function (q) {
             var $row = $("<tr>");
             $row.append($("<td>").text("#" + q.id));
-            $row.append($("<td>").text(q.question_text));
+            $row.append($("<td>").text(previewText(q.question_text)));
             $row.append($("<td>").append(
                 $("<span>").addClass("tag").addClass(categoryClass(q.category)).text(q.category)
             ));
@@ -912,6 +948,12 @@ $(document).ready(function () {
         if (!q) return;
 
         $("#edit-question-id").val(q.id);
+        fillLangField("question-text", q.question_text);
+        fillLangField("opt-a", q.option_a);
+        fillLangField("opt-b", q.option_b);
+        fillLangField("opt-c", q.option_c);
+        fillLangField("opt-d", q.option_d);
+        $("#question-nation").val(q.country);
         $("#question-text").val(q.question_text);
         $("#opt-a").val(q.option_a);
         $("#opt-b").val(q.option_b);
@@ -927,6 +969,7 @@ $(document).ready(function () {
         $("#question-form-title").text("Edit Question #" + q.id);
         $("#submit-question-btn").text("Update Question");
         $("#cancel-edit-btn").show();
+        setQuestionLang("en");
         clearFormError();
         window.scrollTo(0, 0);
     }
@@ -962,11 +1005,11 @@ $(document).ready(function () {
 
         var editId = $("#edit-question-id").val();
         var payload = {
-            question_text: $("#question-text").val().trim(),
-            option_a: $("#opt-a").val().trim(),
-            option_b: $("#opt-b").val().trim(),
-            option_c: $("#opt-c").val().trim(),
-            option_d: $("#opt-d").val().trim(),
+            question_text: collectLangField("question-text"),
+            option_a: collectLangField("opt-a"),
+            option_b: collectLangField("opt-b"),
+            option_c: collectLangField("opt-c"),
+            option_d: collectLangField("opt-d"),
             correct_option: $("input[name='correct-option']:checked").val(),
             category: $("#question-category").val(),
             country: $("#question-nation").val().trim().toUpperCase(),
@@ -976,8 +1019,11 @@ $(document).ready(function () {
         var timeLimit = $("#question-time-limit").val();
         if (timeLimit) payload.time_limit_seconds = parseInt(timeLimit, 10);
 
-        if (!payload.question_text || !payload.option_a || !payload.option_b || !payload.option_c || !payload.option_d) {
-            showFormError("Please fill in the question text and all four options.");
+        var missingEnglish = TRANSLATABLE_FIELDS.some(function (baseId) {
+            return !$("#" + baseId + "-en").val().trim();
+        });
+        if (missingEnglish) {
+            showFormError("Please fill in the English question text and all four English options.");
             return;
         }
         if (!payload.correct_option) {

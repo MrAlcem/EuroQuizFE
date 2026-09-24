@@ -13,38 +13,48 @@
   <div class="container">
     <button id="dark-mode-toggle" type="button"></button>
     <a href="../screens/Options.html" class="btn-text" data-i18n="options">Options</a>
+    <select id="language-select" class="lang-select">
+      <option value="en" data-i18n="english">English</option>
+      <option value="hr" data-i18n="croatian">Croatian</option>
+      <option value="se" data-i18n="swedish">Swedish</option>
+      <option value="nl" data-i18n="dutch">Dutch</option>
+    </select>
     <div id="quiz-screen">
       <div class="top-bar">
-        <a href="../screens/Index.html" class="btn-text" data-i18n="home">Home</a>
-        <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+        <a href="../screens/home.html" class="btn-text" data-i18n="home">Home</a>
       </div>
 
       <div class="header">
         <div><span data-i18n="question">Question</span> <strong id="current">1</strong>/<span id="total">10</span></div>
-        <div data-i18n="time">Time: <strong id="question-timer">30</strong>s</div>
+        <div id="lives-display" class="lives-display"></div>
+        <div><span data-i18n="time">Time</span>: <strong id="question-timer">30</strong>s</div>
       </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       <p id="quiz-level" class="quiz-level"></p>
 
       <div class="question" id="question-text" data-i18n="loading">Loading...</div>
       <div id="options"></div>
       <div class="error-inline" id="quiz-error" style="display:none;"></div>
 
-      <button type="button" class="btn-main" id="submit-btn" disabled data-i18n="submitAnswer">Submit Answer</button>
-      <button type="button" class="btn-main" id="next-btn" style="display:none;" data-i18n="nextQuestion">Next
+      <button type="button" class="btn-main quiz-action-btn" id="submit-btn" disabled data-i18n="submitAnswer">Submit Answer</button>
+      <button type="button" class="btn-main quiz-action-btn" id="next-btn" style="display:none;" data-i18n="nextQuestion">Next
         Question</button>
     </div>
 
     <div id="result-screen">
       <h1 data-i18n="quizFinished">Quiz Finished</h1>
-      <div class="stat"><span data-i18n="correctAnswers">Correct answers:</span> <strong id="correct-count">0</strong>
+      <div class="result-stats">
+        <div class="stat"><span data-i18n="correctAnswers">Correct answers:</span> <strong id="correct-count">0</strong>
+        </div>
+        <div class="stat" id="remaining-lives-stat"><span data-i18n="remainingLives">Remaining lives:</span> <span id="remaining-lives"></span>
+        </div>
+        <div class="stat"><span data-i18n="totalScore">Total score:</span> <strong id="total-score">0</strong></div>
       </div>
-      <div class="stat"><span data-i18n="remainingLives">Remaining lives:</span> <span id="remaining-lives"></span>
-      </div>
-      <div class="stat"><span data-i18n="totalScore">Total score:</span> <strong id="total-score">0</strong></div>
-      <button type="button" class="btn-main" id="play-again-btn" style="margin-top: 24px;" data-i18n="playAgain">Play
+      <p id="daily-reset-note" class="error-inline" style="display:none;"></p>
+      <button type="button" class="btn-main themed" id="play-again-btn" style="margin-top: 24px;" data-i18n="playAgain">Play
         Again</button>
       <a href="../screens/Leaderboard.html" class="btn-secondary" data-i18n="viewLeaderboard">View Leaderboard</a>
-      <a href="../screens/Index.html" class="btn-secondary" data-i18n="backHome">Back to Home</a>
+      <a href="../screens/home.html" class="btn-secondary" data-i18n="backHome">Back to Home</a>
     </div>
   </div>
 
@@ -65,7 +75,6 @@
   <script src="../js/setup.js"></script>
   <script>
     requireLogin();
-    document.getElementById("logout-btn").addEventListener("click", logout);
 
     var currentIndex = 0;
     var questions = [];
@@ -78,6 +87,7 @@
     var isDaily = quizParams.get("daily") === "1";
     var quizCategory = quizParams.get("category") || null;
     var quizCountry = quizParams.get("country") || null;
+    var dailyResetsAtIso = null;
 
     function hearts(n) {
       var html = "";
@@ -101,14 +111,33 @@
       document.getElementById("quiz-screen").style.display = "block";
       document.getElementById("result-screen").style.display = "none";
       document.getElementById("quiz-error").style.display = "none";
+      document.getElementById("play-again-btn").style.display = "";
+      document.getElementById("daily-reset-note").style.display = "none";
+      dailyResetsAtIso = null;
 
       try {
         var session = await fetchQuizSession(isDaily, quizCategory, quizCountry);
+
+        if (isDaily && session.already_completed) {
+          showResults(session.completed_result);
+          setDailyChallengeResetsAt(session.resets_at);
+          showDailyResetNote(session.resets_at);
+          return;
+        }
+
         questions = session.data;
         sessionId = session.session_id;
         timeRemaining = session.timer_seconds;
         document.getElementById("quiz-level").textContent =
           session.gamification.level + " · " + (isDaily ? "Daily Challenge" : "Standard Quiz");
+
+        var livesDisplay = document.getElementById("lives-display");
+        if (isDaily) {
+          livesDisplay.style.display = "none";
+        } else {
+          livesDisplay.innerHTML =
+            hearts(typeof session.lives_remaining === "number" ? session.lives_remaining : 3);
+        }
       } catch (err) {
         document.getElementById("question-text").textContent = "";
         document.getElementById("options").innerHTML = "";
@@ -136,18 +165,56 @@
         var div = document.createElement("div");
         div.className = "option";
         div.dataset.option = key;
-        div.textContent = q.options[key];
+
+        var letter = document.createElement("span");
+        letter.className = "option-letter";
+        letter.textContent = key;
+
+        var text = document.createElement("span");
+        text.className = "option-text";
+        text.textContent = q.options[key];
+
+        div.appendChild(letter);
+        div.appendChild(text);
         div.onclick = function () {
           selectOption(div, key);
         };
         optionsDiv.appendChild(div);
       });
 
+      var progressFill = document.getElementById("progress-fill");
+      progressFill.style.width = ((currentIndex + 1) / questions.length * 100) + "%";
+
       document.getElementById("submit-btn").style.display = "block";
       document.getElementById("submit-btn").disabled = true;
       document.getElementById("next-btn").style.display = "none";
       selectedOption = null;
       startTimer(q.time_limit_seconds || timeRemaining);
+    }
+
+    // Re-renders the currently loaded question(s)' text in place, without
+    // touching the timer or the selected/answered state — used after a
+    // language switch mid-quiz, when the timer must keep running untouched.
+    function updateQuestionText() {
+      var q = questions[currentIndex];
+      if (!q) return;
+
+      document.getElementById("question-text").textContent = q.text;
+      document.querySelectorAll("#options .option").forEach(function (optionEl) {
+        var textEl = optionEl.querySelector(".option-text");
+        if (textEl) textEl.textContent = q.options[optionEl.dataset.option];
+      });
+    }
+
+    async function retranslateQuestions() {
+      if (!sessionId || !questions.length) return;
+      try {
+        var translated = await fetchSessionQuestions(sessionId);
+        questions = translated.data;
+        updateQuestionText();
+      } catch (err) {
+        // Keep showing the questions in whatever language they're already in.
+      }
     }
 
     function selectOption(element, key) {
@@ -165,6 +232,10 @@
 
       try {
         var answer = await answerQuizQuestion(sessionId, chosenOption);
+
+        if (!isDaily) {
+          document.getElementById("lives-display").innerHTML = hearts(answer.lives_remaining);
+        }
 
         document.querySelectorAll(".option").forEach(function (option) {
           option.onclick = null;
@@ -197,6 +268,11 @@
     document.getElementById("next-btn").onclick = async function () {
       if (pendingResult) {
         showResults(pendingResult);
+        if (isDaily) {
+          var resetsAt = nextDailyResetIso();
+          setDailyChallengeResetsAt(resetsAt);
+          showDailyResetNote(resetsAt);
+        }
         pendingResult = null;
         return;
       }
@@ -232,8 +308,24 @@
       document.getElementById("quiz-screen").style.display = "none";
       document.getElementById("result-screen").style.display = "block";
       document.getElementById("correct-count").textContent = result.correct_answers;
-      document.getElementById("remaining-lives").innerHTML = hearts(result.lives_remaining);
       document.getElementById("total-score").textContent = result.score;
+
+      var livesStat = document.getElementById("remaining-lives-stat");
+      if (isDaily) {
+        livesStat.style.display = "none";
+      } else {
+        livesStat.style.display = "";
+        document.getElementById("remaining-lives").innerHTML = hearts(result.lives_remaining);
+      }
+    }
+
+    function showDailyResetNote(resetsAtIso) {
+      dailyResetsAtIso = resetsAtIso;
+      document.getElementById("play-again-btn").style.display = "none";
+      var note = document.getElementById("daily-reset-note");
+      note.textContent = t("dailyAlreadyPlayed") + " " + t("dailyResetsAt") + " " +
+        new Date(resetsAtIso).toLocaleString();
+      note.style.display = "block";
     }
 
     function updateQuizLanguage() {
@@ -247,6 +339,14 @@
       if (nextBtn && nextBtn.style.display !== "none") {
         nextBtn.textContent =
           currentIndex === questions.length - 1 ? t("seeResults") : t("nextQuestion");
+      }
+
+      if (dailyResetsAtIso) {
+        showDailyResetNote(dailyResetsAtIso);
+      }
+
+      if (document.getElementById("quiz-screen").style.display !== "none") {
+        retranslateQuestions();
       }
     }
 
