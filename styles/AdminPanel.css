@@ -348,6 +348,33 @@ td {
     gap: 12px;
 }
 
+.lang-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.lang-tab {
+    padding: 6px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lang-tab.active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.lang-field[hidden] {
+    display: none;
+}
+
 .btn {
     width: 100%;
     padding: 11px;
