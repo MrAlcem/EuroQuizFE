@@ -25,6 +25,16 @@
     font-size: 14px;
 }
 
+.quiz-options-status {
+    margin: -8px 0 16px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.quiz-options-status.is-error {
+    color: #dc2626;
+}
+
 body.dark-mode .quiz-filters select {
     background: #334155;
     color: #f1f5f9;

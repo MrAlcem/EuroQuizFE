@@ -29,19 +29,13 @@
             <label for="quiz-category-select" data-i18n="category">Category</label>
             <select id="quiz-category-select">
                 <option value="" data-i18n="category">Any category</option>
-                <option value="Geography" data-i18n="cat1">Geography</option>
-                <option value="Nature" data-i18n="cat2">Nature</option>
-                <option value="History" data-i18n="cat3">History</option>
-                <option value="Culture" data-i18n="cat4">Culture</option>
             </select>
             <label for="quiz-country-select" data-i18n="country">Country</label>
             <select id="quiz-country-select">
                 <option value="" data-i18n="country">Any country</option>
-                <option value="HR" data-i18n="ctry1">Croatia</option>
-                <option value="NL" data-i18n="ctry2">Netherlands</option>
-                <option value="SE" data-i18n="ctry3">Sweden</option>
             </select>
         </div>
+        <p id="quiz-options-status" class="quiz-options-status" role="status" aria-live="polite" data-i18n="loadingQuizOptions">Loading quiz filters...</p>
 
         <div class="menu-actions">
             <a href="../screens/Quiz.html" id="start-quiz-link" class="menu-card themed">
@@ -97,8 +91,76 @@
                 "../screens/Quiz.html" + (query ? "?" + query : "");
         }
 
+        function getCountryLabel(countryCode) {
+            var knownTranslationKeys = { HR: "ctry1", NL: "ctry2", SE: "ctry3" };
+            if (knownTranslationKeys[countryCode]) return t(knownTranslationKeys[countryCode]);
+
+            try {
+                var language = getLanguage() === "se" ? "sv" : getLanguage();
+                return new Intl.DisplayNames([language], { type: "region" }).of(countryCode) || countryCode;
+            } catch (error) {
+                return countryCode;
+            }
+        }
+
+        async function loadQuizOptions() {
+            var categorySelect = document.getElementById("quiz-category-select");
+            var countrySelect = document.getElementById("quiz-country-select");
+            var status = document.getElementById("quiz-options-status");
+            var categoryTranslationKeys = {
+                Geography: "cat1",
+                Nature: "cat2",
+                History: "cat3",
+                Culture: "cat4"
+            };
+
+            categorySelect.setAttribute("aria-busy", "true");
+            countrySelect.setAttribute("aria-busy", "true");
+            categorySelect.disabled = true;
+            countrySelect.disabled = true;
+            status.classList.remove("is-error");
+            status.hidden = false;
+            status.textContent = t("loadingQuizOptions");
+
+            try {
+                var response = await authFetch(API_BASE + "/quiz/options", { method: "GET" });
+                var body = await response.json();
+                if (!response.ok) throw new Error(body.message || t("failedQuizOptions"));
+
+                categorySelect.length = 1;
+                countrySelect.length = 1;
+                body.data.categories.forEach(function (category) {
+                    var option = document.createElement("option");
+                    option.value = category;
+                    option.textContent = categoryTranslationKeys[category] ? t(categoryTranslationKeys[category]) : category;
+                    if (categoryTranslationKeys[category]) option.setAttribute("data-i18n", categoryTranslationKeys[category]);
+                    categorySelect.appendChild(option);
+                });
+                body.data.countries.forEach(function (countryCode) {
+                    var option = document.createElement("option");
+                    option.value = countryCode;
+                    option.textContent = getCountryLabel(countryCode);
+                    if (countryCode === "HR" || countryCode === "NL" || countryCode === "SE") {
+                        option.setAttribute("data-i18n", { HR: "ctry1", NL: "ctry2", SE: "ctry3" }[countryCode]);
+                    }
+                    countrySelect.appendChild(option);
+                });
+                status.hidden = true;
+                updateStartQuizLink();
+            } catch (error) {
+                status.textContent = t("failedQuizOptions") + ": " + error.message;
+                status.classList.add("is-error");
+            } finally {
+                categorySelect.removeAttribute("aria-busy");
+                countrySelect.removeAttribute("aria-busy");
+                categorySelect.disabled = false;
+                countrySelect.disabled = false;
+            }
+        }
+
         document.getElementById("quiz-category-select").addEventListener("change", updateStartQuizLink);
         document.getElementById("quiz-country-select").addEventListener("change", updateStartQuizLink);
+        loadQuizOptions();
     </script>
 </body>
 
