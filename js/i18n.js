@@ -23,7 +23,8 @@ var translations = {
         failedProfile: "Failed to load profile", theme: "Theme color", dailyQuiz: "Daily Challenge",
         dailyQuizDescription: "One challenge per day · earn XP", category: "Any category",
         cat1: "Geography", cat2: "Nature", cat3: "History", cat4: "Culture", country: "Any country",
-        ctry1: "Croatia", ctry2: "Netherlands", ctry3: "Sweden", time: "Time", historyDesc: "Click a quiz to review your answers."
+        ctry1: "Croatia", ctry2: "Netherlands", ctry3: "Sweden", time: "Time",
+        historyDesc: "Click a quiz to review your answers.", swedish: "Swedish"
     },
     hr: {
         darkMode: "Tamni način", lightMode: "Svijetli način",
@@ -45,12 +46,13 @@ var translations = {
         failedProfile: "Profil nije moguće učitati", theme: "Boja teme", dailyQuiz: "Dnevni izazov",
         dailyQuizDescription: "Jedan izazov dnevno · zaradi XP", category: "Bilo koja kategorija",
         cat1: "Geografija", cat2: "Priroda", cat3: "Povijest", cat4: "Kultura", country: "Bilo koja zemlja",
-        ctry1: "Hrvatska", ctry2: "Nizozemska", ctry3: "Švedska", time: "Vrijeme", historyDesc: "Kliknite na kviz da pregledate svoje odgovore."
+        ctry1: "Hrvatska", ctry2: "Nizozemska", ctry3: "Švedska", time: "Vrijeme",
+        historyDesc: "Kliknite na kviz da pregledate svoje odgovore.", swedish: "Švedski"
     },
     nl: {
         darkMode: "Donkere modus", lightMode: "Lichte modus",
         options: "Opties", language: "Taal", english: "Engels", croatian: "Kroatisch", dutch: "Nederlands",
-        home: "Home", logout: "Uitloggen", signedInAs: "Ingelogd als",
+        home: "Startpagina", logout: "Uitloggen", signedInAs: "Ingelogd als",
         quizChallenge: "Quiz uitdaging", chooseWhat: "Kies wat je wilt doen",
         startQuiz: "Start quiz", quizDescription: "10 vragen · 3 levens · meerkeuze",
         leaderboard: "Ranglijst", leaderboardDescription: "Bekijk de topspelers op score",
@@ -67,7 +69,8 @@ var translations = {
         failedProfile: "Profiel laden mislukt", theme: "Themakleur", dailyQuiz: "Dagelijkse uitdaging",
         dailyQuizDescription: "Eén uitdaging per dag · verdien XP", category: "Elke categorie",
         cat1: "Geografie", cat2: "Natuur", cat3: "Geschiedenis", cat4: "Cultuur", country: "Elk land",
-        ctry1: "Kroatië", ctry2: "Nederland", ctry3: "Zweden", time: "Tijd", historyDesc: "Klik op een quiz om je antwoorden te bekijken."
+        ctry1: "Kroatië", ctry2: "Nederland", ctry3: "Zweden", time: "Tijd",
+        historyDesc: "Klik op een quiz om je antwoorden te bekijken.", swedish: "Svenska"
     },
     se: {
         darkMode: "Mörkt läge", lightMode: "Ljust läge",
@@ -89,7 +92,8 @@ var translations = {
         failedProfile: "Kunde inte ladda profilen", theme: "Temafärg", dailyQuiz: "Daglig utmaning",
         dailyQuizDescription: "En utmaning per dag · tjäna XP", category: "Valfri kategori",
         cat1: "Geografi", cat2: "Natur", cat3: "Historia", cat4: "Kultur", country: "Valfritt land",
-        ctry1: "Kroatien", ctry2: "Nederländerna", ctry3: "Sverige", time: "Tid", historyDesc: "Klicka på ett quiz för att granska dina svar."
+        ctry1: "Kroatien", ctry2: "Nederländerna", ctry3: "Sverige", time: "Tid",
+        historyDesc: "Klicka på ett quiz för att granska dina svar.", swedish: "Zweeds"
     }
 };
 
