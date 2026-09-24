@@ -28,13 +28,24 @@ function isAdmin() {
     return getCurrentRole() === "admin";
 }
 
+// Set by Quiz.html once today's Daily Challenge has been played, so other
+// screens (e.g. the home navbar) know to stop the "come play" animation and
+// show when the next one unlocks, without re-hitting /quiz/daily for it.
+function getDailyChallengeResetsAt() {
+    return localStorage.getItem("dailyChallengeResetsAt");
+}
+
+function setDailyChallengeResetsAt(resetsAtIso) {
+    localStorage.setItem("dailyChallengeResetsAt", resetsAtIso);
+}
+
 function requireAdmin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/Login.html";
+        window.location.href = "../screens/login.html";
         return;
     }
     if (!isAdmin()) {
-        window.location.href = "../screens/Index.html";
+        window.location.href = "../screens/home.html";
     }
 }
 
@@ -48,13 +59,13 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        window.location.href = "../screens/Login.html";
+        window.location.href = "../screens/login.html";
     }
 }
 
 function redirectIfLoggedIn() {
     if (isLoggedIn()) {
-        window.location.href = "../screens/Index.html";
+        window.location.href = "../screens/home.html";
     }
 }
 
@@ -73,7 +84,8 @@ function logout() {
     localStorage.removeItem("userId");
     localStorage.removeItem("email");
     localStorage.removeItem("role");
-    window.location.href = "../screens/Login.html";
+    localStorage.removeItem("dailyChallengeResetsAt");
+    window.location.href = "../screens/home.html";
 }
 
 // Helper: fetch with JWT attached

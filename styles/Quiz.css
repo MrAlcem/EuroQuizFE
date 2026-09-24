@@ -1,4 +1,25 @@
 /* =========================
+   Language switcher
+   ========================= */
+
+.lang-select {
+    background: transparent;
+    border: 1px solid #cbd5e1;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+body.dark-mode .lang-select {
+    background: #334155;
+    color: #f1f5f9;
+    border-color: #475569;
+}
+
+/* =========================
    Background crossfade
    ========================= */
 
@@ -15,19 +36,6 @@ body::after {
     position: fixed;
     inset: 0;
     z-index: -1;
-
-    .quiz-level {
-        margin: -12px 0 18px;
-        color: #64748b;
-        font-weight: 600;
-    }
-
-    .question {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 22px;
-        line-height: 1.4;
-    }
 
     background-repeat: no-repeat;
     background-size: cover;
@@ -79,6 +87,193 @@ body.dark-mode::after {
 
 
 /* =========================
+   Quiz layout
+   ========================= */
+
+.container {
+    max-width: 560px;
+}
+
+#result-screen {
+    display: none;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.header strong {
+    color: #1e293b;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: #2d5ad3;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.quiz-level {
+    margin: 0 0 20px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.question {
+    font-size: 21px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    line-height: 1.4;
+    color: #1e293b;
+}
+
+#options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.option:hover {
+    background: #eef2f7;
+    border-color: #cbd5e1;
+}
+
+.option-letter {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.option-text {
+    flex: 1;
+}
+
+.option.selected {
+    border-color: #2d5ad3;
+    background: #eaf0fd;
+}
+
+.option.selected .option-letter {
+    background: #2d5ad3;
+    color: #ffffff;
+}
+
+.option.correct {
+    border-color: #16a34a;
+    background: #dcfce7;
+    color: #14532d;
+}
+
+.option.correct .option-letter {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.option.wrong {
+    border-color: #dc2626;
+    background: #fee2e2;
+    color: #7f1d1d;
+}
+
+.option.wrong .option-letter {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.result-stats {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 4px 18px;
+    margin: 20px 0 24px;
+    background: #f8fafc;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    margin: 0;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+.stat:last-child {
+    border-bottom: none;
+}
+
+.stat strong,
+.stat #remaining-lives {
+    font-size: 18px;
+}
+
+.stat strong {
+    color: #1e293b;
+}
+
+.life-heart {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+.lives-display {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.quiz-action-btn {
+    background: #2d5ad3;
+}
+
+.quiz-action-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================
    Existing colors
    ========================= */
 
@@ -98,17 +293,74 @@ body.dark-mode .header strong {
     color: #f1f5f9;
 }
 
+body.dark-mode .progress-bar {
+    background: #334155;
+}
+
+body.dark-mode .quiz-level {
+    color: #94a3b8;
+}
+
+body.dark-mode .question {
+    color: #f1f5f9;
+}
+
 body.dark-mode .option {
     background: #334155;
     color: #f1f5f9;
+    border-color: #334155;
 }
 
 body.dark-mode .option:hover {
     background: #475569;
+    border-color: #475569;
+}
+
+body.dark-mode .option-letter {
+    background: #475569;
+    color: #e2e8f0;
+}
+
+body.dark-mode .option.selected {
+    border-color: #60a5fa;
+    background: #1e3a5f;
+}
+
+body.dark-mode .option.selected .option-letter {
+    background: #60a5fa;
+    color: #0f172a;
+}
+
+body.dark-mode .option.correct {
+    border-color: #22c55e;
+    background: #14532d;
+    color: #dcfce7;
+}
+
+body.dark-mode .option.correct .option-letter {
+    background: #22c55e;
+    color: #0f172a;
+}
+
+body.dark-mode .option.wrong {
+    border-color: #ef4444;
+    background: #7f1d1d;
+    color: #fee2e2;
+}
+
+body.dark-mode .option.wrong .option-letter {
+    background: #ef4444;
+    color: #0f172a;
+}
+
+body.dark-mode .result-stats {
+    background: #1e293b;
+    border-color: #334155;
 }
 
 body.dark-mode .stat {
     color: #cbd5e1;
+    border-bottom-color: #334155;
 }
 
 body.dark-mode .stat strong {
