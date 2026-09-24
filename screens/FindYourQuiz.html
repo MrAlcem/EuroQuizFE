@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Euro Quiz - Find Your Quiz</title>
+  <link rel="stylesheet" href="../styles/Main.css">
+  <link rel="stylesheet" href="../styles/FindYourQuiz.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="../screens/home.html" class="btn-text" data-i18n="home">Home</a>
+      <button type="button" class="btn-text" id="logout-btn" data-i18n="logout">Logout</button>
+    </div>
+
+    <button id="dark-mode-toggle" type="button"></button>
+
+    <h1 data-i18n="quizChallenge">Quiz Challenge</h1>
+    <p class="subtitle" data-i18n="chooseWhat">Choose what you want to do</p>
+
+    <div class="quiz-filters">
+      <label for="quiz-category-select" data-i18n="category">Category</label>
+      <select id="quiz-category-select">
+        <option value="" data-i18n="category">Any category</option>
+        <option value="Geography" data-i18n="cat1">Geography</option>
+        <option value="Nature" data-i18n="cat2">Nature</option>
+        <option value="History" data-i18n="cat3">History</option>
+        <option value="Culture" data-i18n="cat4">Culture</option>
+      </select>
+      <label for="quiz-country-select" data-i18n="country">Country</label>
+      <select id="quiz-country-select">
+        <option value="" data-i18n="country">Any country</option>
+        <option value="HR" data-i18n="ctry1">Croatia</option>
+        <option value="NL" data-i18n="ctry2">Netherlands</option>
+        <option value="SE" data-i18n="ctry3">Sweden</option>
+      </select>
+    </div>
+
+    <div class="menu-actions">
+      <a href="Quiz.html" id="start-quiz-link" class="menu-card themed">
+        <span class="menu-title" data-i18n="startQuiz">Start Quiz</span>
+        <span class="menu-desc" data-i18n="quizDescription">10 questions &middot; 3 lives</span>
+      </a>
+      <a href="Leaderboard.html" class="menu-card secondary">
+        <span class="menu-title" data-i18n="leaderboard">Leaderboard</span>
+        <span class="menu-desc" data-i18n="leaderboardDescription">See top players by score</span>
+      </a>
+      <a href="Profile.html" class="menu-card secondary">
+        <span class="menu-title" data-i18n="myProfile">My Profile</span>
+        <span class="menu-desc" data-i18n="profileDescription">Personal score and quiz history</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Core -->
+  <script src="../js/session.js"></script>
+
+  <!-- API layer -->
+  <script src="../js/api/auth.js"></script>
+  <script src="../js/api/quiz.js"></script>
+  <script src="../js/api/leaderboard.js"></script>
+  <script src="../js/api/profile.js"></script>
+
+  <!-- UI helpers -->
+  <script src="../js/i18n.js"></script>
+  <script src="../js/dark-mode.js"></script>
+  <script src="../js/theme.js"></script>
+  <script src="../js/setup.js"></script>
+  <script>
+    requireLogin();
+    document.getElementById("logout-btn").addEventListener("click", logout);
+    setupSiteSettings();
+
+    function updateStartQuizLink() {
+      var category = document.getElementById("quiz-category-select").value;
+      var country = document.getElementById("quiz-country-select").value;
+      var params = new URLSearchParams();
+      if (category) params.set("category", category);
+      if (country) params.set("country", country);
+      var query = params.toString();
+      document.getElementById("start-quiz-link").href = "Quiz.html" + (query ? "?" + query : "");
+    }
+
+    document.getElementById("quiz-category-select").addEventListener("change", updateStartQuizLink);
+    document.getElementById("quiz-country-select").addEventListener("change", updateStartQuizLink);
+  </script>
+</body>
+
+</html>
